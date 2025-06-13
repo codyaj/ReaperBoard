@@ -22,12 +22,4 @@ public:
     void onEnter() override;
 };
 
-/** 
- *
- * @brief Starts a Wi-Fi scanner and outputs nearby networks via serial
- * 
- * @note Requires WiFi.mod(WIFI_STA) 
- */
-void printScanResult();
-
 #endif
