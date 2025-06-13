@@ -74,7 +74,7 @@ void WiFiDisplay::displayScreen() {
         display.println("Loading...");
     }
 
-    renderSidebar(Icon::LOGO, Icon::UP_ARROW, Icon::TARGET, Icon::DOWN_ARROW, networksFound);
+    renderSidebar(Icon::WIFI, Icon::UP_ARROW, Icon::RIGHT_ARROW, Icon::DOWN_ARROW, networksFound);
 
     display.display();
 }

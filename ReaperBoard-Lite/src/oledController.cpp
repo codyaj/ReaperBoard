@@ -19,12 +19,21 @@ void OLEDDisplay::handleBackBtn() {
     onExit();
 }
 
-void OLEDDisplay::renderSidebar(Icon firstIcon, Icon secondIcon, Icon thirdIcon, Icon fourthIcon, int value) {
-    // Get bitmaps first
+const uint8_t* getIconBitmap(Icon icon) {
+    return (const uint8_t*)pgm_read_ptr(&iconBitmaps[static_cast<int>(icon)]);
+}
 
+void OLEDDisplay::renderSidebar(Icon firstIcon, Icon secondIcon, Icon thirdIcon, Icon fourthIcon, int value) {
+    const uint8_t* firstBitmap = getIconBitmap(firstIcon);
+    const uint8_t* secondBitmap = getIconBitmap(secondIcon);
+    const uint8_t* thirdBitmap = getIconBitmap(thirdIcon);
+    const uint8_t* fourthBitmap = getIconBitmap(fourthIcon);
+    
     display.drawLine(117, 0, 117, 63, WHITE);
-    display.drawBitmap(120, 1, skullBitmap, 7, 7, WHITE);
-    display.drawBitmap(120, 16, upArrowBitmap, 7, 7, WHITE);
-    display.drawBitmap(120, 30, targetBitmap, 7, 7, WHITE);
-    display.drawBitmap(120, 43, downArrowBitmap, 7, 7, WHITE);
+    display.drawBitmap(120, 1, firstBitmap, 7, 7, WHITE);
+    display.drawBitmap(120, 16, secondBitmap, 7, 7, WHITE);
+    display.drawBitmap(120, 30, thirdBitmap, 7, 7, WHITE);
+    display.drawBitmap(120, 43, fourthBitmap, 7, 7, WHITE);
+    display.setCursor(120, 55);
+    display.print(value == -1 ? 0 : value);
 }

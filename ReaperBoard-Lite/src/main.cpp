@@ -14,7 +14,7 @@ void setup() {
 unsigned long lastDisplayUpdate = 0;
 const unsigned long displayUpdateInterval = 250;
 unsigned long lastButtonUpdate = 0;
-const unsigned long debounceDelay = 150;
+const unsigned long debounceDelay = 250;
 
 void loop() {
   if (millis() - lastDisplayUpdate >= displayUpdateInterval) {

@@ -45,6 +45,16 @@ const uint8_t downArrowBitmap[] PROGMEM = {
     0b00010000
 };
 
+const uint8_t rightArrowBitmap[] PROGMEM = {
+    0b11000000,
+    0b11110000,
+    0b01111100,
+    0b01111110,
+    0b01111100,
+    0b11110000,
+    0b11000000
+};
+
 const uint8_t targetBitmap[] PROGMEM = {
     0b00111000,
     0b01000100,
@@ -55,13 +65,31 @@ const uint8_t targetBitmap[] PROGMEM = {
     0b00111000
 };
 
+const uint8_t wifiBitmap[] PROGMEM = {
+    0b00000000,
+    0b01111100,
+    0b10000010,
+    0b00111000,
+    0b01000100,
+    0b00010000,
+    0b00000000
+};
+
+const uint8_t* const iconBitmaps[] PROGMEM = {
+    skullBitmap,
+    wifiBitmap,
+    upArrowBitmap,
+    downArrowBitmap,
+    rightArrowBitmap,
+    targetBitmap,
+};
+
 enum class Icon {
     LOGO,
     WIFI,
     UP_ARROW,
     DOWN_ARROW,
     RIGHT_ARROW,
-    LEFT_ARROW,
     TARGET
 };
 
