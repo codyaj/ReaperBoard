@@ -1,16 +1,30 @@
 #include "main.h"
 
-void setup()
-{
+WiFiDisplay wifiDisplay;
+
+void setup() {
   Serial.begin(115200);
-  Serial.println();
 
-  WiFi.mode(WIFI_STA);
-  WiFi.disconnect();
-  delay(100);
+  initOLED();
+  initButtons();
 
-  printScanResult();
+  wifiDisplay.onEnter();
 }
 
+unsigned long lastDisplayUpdate = 0;
+const unsigned long displayUpdateInterval = 250;
+unsigned long lastButtonUpdate = 0;
+const unsigned long debounceDelay = 150;
 
-void loop() {}
+void loop() {
+  if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
+    wifiDisplay.displayScreen();
+    lastDisplayUpdate = millis();
+  }
+
+  if (millis() - lastButtonUpdate >= debounceDelay) {
+    if (wifiDisplay.scanInputs()) {
+      lastButtonUpdate = millis();
+    }
+  }
+}

@@ -5,5 +5,6 @@
 #include <ESP8266WiFi.h>
 
 #include "scanWifi.h"
+#include "oledController.h"
 
 #endif
