@@ -75,6 +75,46 @@ const uint8_t wifiBitmap[] PROGMEM = {
     0b00000000
 };
 
+const uint8_t RFIDBitmap[] PROGMEM = {
+    0b01111100,
+    0b10000010,
+    0b00111000,
+    0b01000100,
+    0b00000000,
+    0b11111110,
+    0b11111110
+};
+
+const uint8_t antennaTowerBitmap[] PROGMEM = {
+    0b01111100,
+    0b10000010,
+    0b00111000,
+    0b01000100,
+    0b00010000,
+    0b00111000,
+    0b00101000
+};
+
+const uint8_t crossBitmap[] PROGMEM = {
+    0b01111100,
+    0b11000110,
+    0b10101010,
+    0b10010010,
+    0b10101010,
+    0b11000110,
+    0b01111100
+};
+
+const uint8_t maskBitmap[] PROGMEM = {
+    0b01111100,
+    0b11111110,
+    0b10111010,
+    0b11111110,
+    0b10111010,
+    0b11000110,
+    0b01111100
+};
+
 const uint8_t* const iconBitmaps[] PROGMEM = {
     skullBitmap,
     wifiBitmap,
@@ -90,7 +130,11 @@ enum class Icon {
     UP_ARROW,
     DOWN_ARROW,
     RIGHT_ARROW,
-    TARGET
+    TARGET,
+    RFID,
+    ANTENNA_TOWER,
+    CROSS,
+    MASK
 };
 
 void initOLED();

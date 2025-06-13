@@ -29,21 +29,22 @@ void MenuDisplay::displayScreen() {
 
     display.setTextSize(1);
     display.setCursor(0,0);
+    display.drawBitmap(0, 0, reaperBitmap, 118, 19, WHITE);
 
     char buffer[9];
 
-    for (int row = 0; row < 4; row++) {
-        for (int col = 0; col < 2; col++) {
+    for (int row = 0; row < MENU_ROWS; row++) {
+        for (int col = 0; col < MENU_COLS; col++) {
             display.setTextColor(SSD1306_WHITE);
 
             strcpy_P(buffer, menuLayout[row][col]);
 
             int x = col == 0 ? 7 : 63;
-            int y = 7 + row * (6 + 8);
+            int y = 26 + row * (6 + 8);
 
             if (row == index[0] && col == index[1]) {
                 display.setTextColor(SSD1306_BLACK);
-                display.fillRect(x - 3, y - 3, 54, 14, SSD1306_WHITE);
+                display.fillRect(x - 2, y - 2, 52, 12, SSD1306_WHITE);
             }
             display.setCursor(x, y);
             display.print(buffer);
