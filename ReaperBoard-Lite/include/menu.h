@@ -22,6 +22,8 @@ class MenuDisplay : public OLEDDisplay {
 private:
     int index[2] = {0, 0};
 public:
+    String selectedItem = "";
+    
     bool scanInputs() override;
     void displayScreen() override;
 };

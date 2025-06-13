@@ -1,6 +1,7 @@
 #include "scanWifi.h"
 
 extern Adafruit_SSD1306 display;
+extern bool awaitingExit;
 
 bool WiFiDisplay::scanInputs() {
     bool buttonPressed = false;
@@ -10,7 +11,8 @@ bool WiFiDisplay::scanInputs() {
         buttonPressed = true;
     }
     if (digitalRead(SECOND_BUTTON) == LOW) {
-        Serial.println("Second");
+        awaitingExit = true;
+        onExit();
         buttonPressed = true;
     }
     if (digitalRead(THIRD_BUTTON) == LOW) {

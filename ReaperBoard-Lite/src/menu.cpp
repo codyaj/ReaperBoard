@@ -1,6 +1,7 @@
 #include "menu.h"
 
 extern Adafruit_SSD1306 display;
+extern bool awaitingExit;
 
 bool MenuDisplay::scanInputs() {
     bool buttonPressed = false;
@@ -10,7 +11,9 @@ bool MenuDisplay::scanInputs() {
         index[1] = (index[1] + 1) % MENU_COLS;
     }
     if (digitalRead(SECOND_BUTTON) == LOW) {
-        Serial.println("Second");
+        char buffer[9];
+        strcpy_P(buffer, menuLayout[index[0]][index[1]]);
+        selectedItem = String(buffer);
         buttonPressed = true;
     }
     if (digitalRead(THIRD_BUTTON) == LOW) {
