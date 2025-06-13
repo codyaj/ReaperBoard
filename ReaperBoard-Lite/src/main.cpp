@@ -2,6 +2,7 @@
 
 WiFiDisplay wifiDisplay;
 MenuDisplay menuDisplay;
+LoginDisplay loginDisplay;
 
 extern bool awaitingExit;
 
@@ -34,25 +35,42 @@ void showWifiPage() {
   }
 }
 
+extern bool loggedIn;
+
 void loop() {
-  awaitingExit = false;
+  if (loggedIn) {
+    awaitingExit = false;
 
-  if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
-    menuDisplay.displayScreen();
-    lastDisplayUpdate = millis();
-  }
-
-  if (millis() - lastButtonUpdate >= debounceDelay) {
-    if (menuDisplay.scanInputs()) {
-      lastButtonUpdate = millis();
-    }
-  }
-
-  if (menuDisplay.selectedItem != "") {
-    if (menuDisplay.selectedItem == "WiFiScan") {
-      showWifiPage();
+    if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
+      menuDisplay.displayScreen();
+      lastDisplayUpdate = millis();
     }
 
-    menuDisplay.selectedItem = "";
+    if (millis() - lastButtonUpdate >= debounceDelay) {
+      if (menuDisplay.scanInputs()) {
+        lastButtonUpdate = millis();
+      }
+    }
+
+    if (menuDisplay.selectedItem != "") {
+      if (menuDisplay.selectedItem == "WiFiScan") {
+        showWifiPage();
+      } else if (menuDisplay.selectedItem == " Logout ") {
+        loggedIn = false;
+      }
+
+      menuDisplay.selectedItem = "";
+    }
+  } else {
+    if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
+      loginDisplay.displayScreen();
+      lastDisplayUpdate = millis();
+    }
+
+    if (millis() - lastButtonUpdate >= debounceDelay) {
+      if (loginDisplay.scanInputs()) {
+        lastButtonUpdate = millis();
+      }
+    }
   }
 }

@@ -6,6 +6,7 @@
 
 #include "scanWifi.h"
 #include "menu.h"
+#include "login.h"
 #include "oledController.h"
 
 #endif
