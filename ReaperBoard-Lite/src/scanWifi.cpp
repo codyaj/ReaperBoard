@@ -82,6 +82,7 @@ void WiFiDisplay::displayScreen() {
 }
 
 void WiFiDisplay::onEnter() {
+    WiFi.mode(WIFI_STA);
     WiFi.scanNetworks(true, true);
 }
 

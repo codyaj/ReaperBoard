@@ -3,8 +3,10 @@
 WiFiDisplay wifiDisplay;
 MenuDisplay menuDisplay;
 LoginDisplay loginDisplay;
+MacDisplay macDisplay;
 
 extern bool awaitingExit;
+extern bool loggedIn;
 
 void setup() {
   Serial.begin(115200);
@@ -35,7 +37,22 @@ void showWifiPage() {
   }
 }
 
-extern bool loggedIn;
+void showMacPage() {
+  macDisplay.onEnter();
+
+  while (!awaitingExit) {
+    if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
+      macDisplay.displayScreen();
+      lastDisplayUpdate = millis();
+    }
+
+    if (millis() - lastButtonUpdate >= debounceDelay) {
+      if (macDisplay.scanInputs()) {
+        lastButtonUpdate = millis();
+      }
+    }
+  }
+}
 
 void loop() {
   if (loggedIn) {
@@ -57,6 +74,8 @@ void loop() {
         showWifiPage();
       } else if (menuDisplay.selectedItem == " Logout ") {
         loggedIn = false;
+      } else if (menuDisplay.selectedItem == "MACSpoof") {
+        showMacPage();
       }
 
       menuDisplay.selectedItem = "";
