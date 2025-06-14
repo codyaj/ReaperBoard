@@ -9,9 +9,9 @@
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-#define FIRST_BUTTON D7
-#define SECOND_BUTTON D6
-#define THIRD_BUTTON D5
+#define FIRST_BUTTON D4
+#define SECOND_BUTTON D3
+#define THIRD_BUTTON D0
 
 
 const uint8_t skullBitmap[] PROGMEM = {
@@ -122,6 +122,10 @@ const uint8_t* const iconBitmaps[] PROGMEM = {
     downArrowBitmap,
     rightArrowBitmap,
     targetBitmap,
+    RFIDBitmap,
+    antennaTowerBitmap,
+    crossBitmap,
+    maskBitmap
 };
 
 enum class Icon {

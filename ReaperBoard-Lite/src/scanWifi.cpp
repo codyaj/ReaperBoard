@@ -42,7 +42,7 @@ void WiFiDisplay::displayScreen() {
 
         WiFi.getNetworkInfo(index, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
 
-        display.println(String(index + 1) + ") " + ssid);
+        display.println(String(index + 1) + ") " + isHidden ? ssid : "<Hidden>");
         display.println("===================");
 
         
@@ -71,7 +71,6 @@ void WiFiDisplay::displayScreen() {
         display.println("Enc: " + encStr);
 
         display.println("Ch: " + String(channel) + " (" + String(RSSI) + "dBm" + ")");
-        display.println(isHidden ? "Hidden" : "Visible");
     } else {
         display.println("Loading...");
     }
