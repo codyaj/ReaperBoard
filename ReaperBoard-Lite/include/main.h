@@ -8,6 +8,7 @@
 #include "menu.h"
 #include "login.h"
 #include "mac.h"
+#include "deauth.h"
 #include "oledController.h"
 
 #endif

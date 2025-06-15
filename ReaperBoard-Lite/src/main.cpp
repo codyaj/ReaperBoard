@@ -4,6 +4,7 @@ WiFiDisplay wifiDisplay;
 MenuDisplay menuDisplay;
 LoginDisplay loginDisplay;
 MacDisplay macDisplay;
+DeauthDisplay deauthDisplay;
 
 extern bool awaitingExit;
 extern bool loggedIn;
@@ -54,6 +55,32 @@ void showMacPage() {
   }
 }
 
+unsigned long lastAttack = 0;
+const unsigned long attackDelay = 10;
+
+void showDeauthPage() {
+  deauthDisplay.onEnter();
+
+  while (!awaitingExit) {
+    if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
+      deauthDisplay.displayScreen();
+      lastDisplayUpdate = millis();
+    }
+
+    if (millis() - lastButtonUpdate >= debounceDelay) {
+      if (deauthDisplay.scanInputs()) {
+        lastButtonUpdate = millis();
+      }
+    }
+
+    if (millis() - lastAttack >= attackDelay) {
+      deauthDisplay.attack();
+    }
+  }
+}
+
+
+
 void loop() {
   if (loggedIn) {
     awaitingExit = false;
@@ -76,6 +103,8 @@ void loop() {
         loggedIn = false;
       } else if (menuDisplay.selectedItem == "MACSpoof") {
         showMacPage();
+      } else if (menuDisplay.selectedItem == "DeAuther") {
+        showDeauthPage();
       }
 
       menuDisplay.selectedItem = "";
