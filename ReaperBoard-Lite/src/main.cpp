@@ -75,7 +75,10 @@ void showDeauthPage() {
 
     if (millis() - lastAttack >= attackDelay) {
       deauthDisplay.attack();
+      lastAttack = millis();
     }
+
+    delay(1); // avoid watchdog reset
   }
 }
 

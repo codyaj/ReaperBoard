@@ -29,7 +29,7 @@ enum class PacketType {
 };
 
 enum class Direction { 
-    UNKOWN, 
+    UNKNOWN, 
     TO_AP, 
     FROM_AP 
 };
@@ -56,7 +56,7 @@ private:
     void handleBeacon(uint8_t* APMac);
     void handleProbeReq(uint8_t* clientMac);
     void handleProbeRes(uint8_t* clientMac, uint8_t* APMac);
-    void handleData(uint8_t* receiverMac, uint8_t* transmitterMac, uint8_t* APMac);
+    void handleData(uint8_t* receiverMac, uint8_t* transmitterMac, uint8_t* APMac, uint8_t toDS, uint8_t fromDs);
 
     static DeauthDisplay* instance; // Work around for findClientMac
 
