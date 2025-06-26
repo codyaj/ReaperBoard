@@ -9,6 +9,7 @@
 #include "login.h"
 #include "mac.h"
 #include "deauth.h"
+#include "cardScanner.h"
 #include "oledController.h"
 
 #endif

@@ -5,6 +5,7 @@ MenuDisplay menuDisplay;
 LoginDisplay loginDisplay;
 MacDisplay macDisplay;
 DeauthDisplay deauthDisplay;
+ScannerDisplay scannerDisplay;
 
 extern bool awaitingExit;
 extern bool loggedIn;
@@ -82,6 +83,33 @@ void showDeauthPage() {
   }
 }
 
+unsigned long lastPosScan = 0;
+const unsigned long scanDelay = 500;
+
+void showRFIDPage() {
+  scannerDisplay.onEnter();
+
+  while (!awaitingExit) {
+    if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
+      scannerDisplay.displayScreen();
+      lastDisplayUpdate = millis();
+    }
+
+    if (millis() - lastButtonUpdate >= debounceDelay) {
+      if (scannerDisplay.scanInputs()) {
+        lastButtonUpdate = millis();
+      }
+    }
+
+    if (millis() - lastPosScan >= scanDelay) {
+      if (scannerDisplay.scan()) {
+        lastPosScan = millis();
+      }
+    }
+
+    delay(1); // avoid watchdog reset
+  }
+}
 
 
 void loop() {
@@ -108,6 +136,8 @@ void loop() {
         showMacPage();
       } else if (menuDisplay.selectedItem == "DeAuther") {
         showDeauthPage();
+      } else if (menuDisplay.selectedItem == "RFID/NFC") {
+        showRFIDPage();
       }
 
       menuDisplay.selectedItem = "";
