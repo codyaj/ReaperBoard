@@ -7,6 +7,7 @@ bool awaitingExit = false;
 void initOLED() {
     if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
         Serial.println(F("SSD1306 allocation failed"));
+        SDManager::logEvent("OLED", "SSD1306 allocation failed");
         for(;;); // Loop Forever
     }
 };

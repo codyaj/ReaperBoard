@@ -5,7 +5,9 @@
 #include <Wire.h>
 #include <PN532_I2C.h>
 #include <PN532.h>
+
 #include "oledController.h"
+#include "sdManager.h"
 
 #define SDA_PIN D2
 #define SCL_PIN D1

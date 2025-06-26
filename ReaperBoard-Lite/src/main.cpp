@@ -10,8 +10,23 @@ ScannerDisplay scannerDisplay;
 extern bool awaitingExit;
 extern bool loggedIn;
 
+
 void setup() {
   Serial.begin(115200);
+  Serial.println(ESP.getResetReason());
+
+  Serial.println("begin");
+  SDManager::begin();
+
+  Serial.println("Loading settings");
+
+  String passcode;
+  int screenTimeout;
+  
+  SDManager::loadSettings(passcode, screenTimeout);
+  Serial.println("Settings loaded");
+
+  loginDisplay.setPasscode(passcode);
 
   initOLED();
   initButtons();

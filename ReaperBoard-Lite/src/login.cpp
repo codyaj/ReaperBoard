@@ -16,16 +16,16 @@ bool LoginDisplay::scanInputs() {
         char selectedChar = buffer[0];
 
         if (selectedChar == '<' && charIndex > 0) {
-            passcode[charIndex] = ' ';
+            enteredPasscode[charIndex] = ' ';
             charIndex--;
         } else if (selectedChar == '*') {
-            if (memcmp(passcode, hardCodedPassword, 6) == 0) {
+            if (memcmp(enteredPasscode, passcode, 6) == 0) {
                 loggedIn = true;
             }
             charIndex = 0;
-            memset(passcode, 0, sizeof(passcode));
+            memset(enteredPasscode, 0, sizeof(enteredPasscode));
         } else if (charIndex < 6 && selectedChar != '<') {
-            passcode[charIndex] = selectedChar;
+            enteredPasscode[charIndex] = selectedChar;
             charIndex++;
         }
 
@@ -81,4 +81,15 @@ void LoginDisplay::displayScreen() {
     renderSidebar(Icon::LOGO, Icon::RIGHT_ARROW, Icon::TARGET, Icon::DOWN_ARROW, -99);
 
     display.display();
+}
+
+void LoginDisplay::setPasscode(const String &strPasscode) {
+    if (strPasscode.length() != 6) {
+        SDManager::logEvent("Pass", "passcode length != 6. Real length == " + String(strPasscode.length()));
+        return;
+    }
+
+    for (int i = 0; i < 6; i++) {
+        passcode[i] = strPasscode[i];
+    }
 }

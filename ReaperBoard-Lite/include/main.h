@@ -11,5 +11,6 @@
 #include "deauth.h"
 #include "cardScanner.h"
 #include "oledController.h"
+#include "sdManager.h"
 
 #endif

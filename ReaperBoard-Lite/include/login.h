@@ -7,6 +7,7 @@
 #include <Adafruit_SSD1306.h>
 
 #include "oledController.h"
+#include "sdManager.h"
 
 #define MENU_ROWS 4
 #define MENU_COLS 3
@@ -22,13 +23,13 @@ class LoginDisplay : public OLEDDisplay {
 private:
     int index[2] = {0, 0};
     int charIndex = 0;
-    char passcode[6];
+    char enteredPasscode[6];
 
-    // Temp
-    char hardCodedPassword[6] = {'3', '3', '3', '3', '3', '3'};
+    char passcode[6];
 public:
     bool scanInputs() override;
     void displayScreen() override;
+    void setPasscode(const String &passcode);
 };
 
 #endif
