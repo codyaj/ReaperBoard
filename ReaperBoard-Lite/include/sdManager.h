@@ -9,6 +9,7 @@
 #define CSPIN D8
 #define SETTINGS_FILE "/settings.json"
 #define LOG_FILE "/logs.txt"
+#define MAC_FOLDER "/macs"
 #define MAX_LOG_SIZE 32768 // in bytes
 
 #define DEFAULT_PASSCODE "333333"
@@ -24,8 +25,8 @@ namespace SDManager {
     void logEvent(const String &type, const String &message);
 
     // MACs
-    void listMACs(String *names, int maxCount);
-    void loadMAC(const String &name, String &macAddress);
+    int listMACs(String *names, int maxCount);
+    bool loadMAC(const String &name, uint8_t *macAddress);
 
     // APs
     void listAPs(String *names, int maxCount);

@@ -31,7 +31,7 @@ void SDManager::loadSettings(String &passcode, int &screenTimeout) {
         passcode = DEFAULT_PASSCODE;
         screenTimeout = DEFAULT_SCREEN_TIMEOUT;
 
-        logEvent("SD Reader", "Failed to open settings.json for reading");
+        logEvent("SDManager", "Failed to open settings for reading: " + String(SETTINGS_FILE));
 
         return;
     }
@@ -48,7 +48,7 @@ void SDManager::loadSettings(String &passcode, int &screenTimeout) {
         passcode = DEFAULT_PASSCODE;
         screenTimeout = DEFAULT_SCREEN_TIMEOUT;
 
-        logEvent("SD Reader", "JSON parse error: " + String(error.c_str()));
+        logEvent("SDManager", "JSON parse error: " + String(error.c_str()));
 
         return;
     }
@@ -94,4 +94,81 @@ void SDManager::logEvent(const String &type, const String &message) {
     log.print(": ");
     log.println(message);
     log.close();
+}
+
+bool isValidMac(const String &mac) {
+    if (mac.length() != 12) {
+        return false;
+    }
+
+    for (int i = 0; i < 12; i++) {
+        if (!isHexadecimalDigit(mac.charAt(i))) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+int SDManager::listMACs(String *names, int maxCount) {
+    if (!SDCardPresent) {
+        return 0;
+    }
+
+    File dir = SD.open(MAC_FOLDER);
+    if (!dir) {
+        logEvent("SDManager", "Failed to open folder containing mac addresses: " + String(MAC_FOLDER));
+        return 0;
+    }
+    if (!dir.isDirectory()) {
+        logEvent("SDManager", "Folder containing mac addresses is NOT a folder: " + String(MAC_FOLDER));
+        return 0;
+    }
+
+    File file = dir.openNextFile();
+    int i = 0;
+    while (file && i < maxCount) {
+        if (!file.isDirectory()) {
+            String mac = "";
+            while (file.available()) {
+                char c = file.read();
+                if (c == '\n' || c == '\r') break;
+                mac += c;
+            }
+
+            if (isValidMac(mac)) {
+                names[i] = file.name();
+                i++;
+            }
+        }
+
+        file = dir.openNextFile();
+    }
+
+    return i;
+}
+
+bool SDManager::loadMAC(const String &name, uint8_t *macAddress) {
+    if (!SDCardPresent) {
+        return false;
+    }
+
+    File file = SD.open(MAC_FOLDER + String("/") + name);
+    if (!file) {
+        logEvent("SDManager", "Failed to open file containing mac address: " + String(MAC_FOLDER + String("/") + name));
+        return false;
+    }
+
+    String mac = "";
+    while (file.available()) {
+        char c = file.read();
+        if (c == '\n' || c == '\r') break;
+        mac += c;
+    }
+
+    for (int i = 0; i < 6; i++) {
+        macAddress[i] = strtoul(mac.substring(i * 2, i * 2 + 2).c_str(), NULL, 16);
+    }
+
+    return true;
 }

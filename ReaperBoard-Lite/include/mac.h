@@ -9,10 +9,14 @@
 
 #include "oledController.h"
 
+#define MAX_MACS 10
+
 class MacDisplay : public OLEDDisplay {
 private:
     int index = 0;
     int itemCount = 1;
+    String macs[MAX_MACS];
+    int macsLoaded;
 protected:
     void onExit() override;
 public:

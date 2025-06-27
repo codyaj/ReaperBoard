@@ -7,7 +7,6 @@ PN532_I2C pn532_i2c(Wire);
 PN532 nfc(pn532_i2c);
 
 void initPN532() {
-    // Wire.begin(SDA_PIN, SCL_PIN); // Already called for the oled
     nfc.begin();
 
     uint32_t versiondata = nfc.getFirmwareVersion();

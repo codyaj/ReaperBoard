@@ -26,11 +26,17 @@ bool MacDisplay::scanInputs() {
             mac[5] = (r2 >> 8) & 0xFF;
 
             wifi_set_macaddr(STATION_IF, &mac[0]);
+        } else {
+            uint8_t mac[6];
+            
+            if (SDManager::loadMAC(macs[index - 1], mac)) {
+                wifi_set_macaddr(STATION_IF, &mac[0]);
+            }
         }
         buttonPressed = true;
     }
     if (digitalRead(THIRD_BUTTON) == LOW) {
-        index = (index + 1) % itemCount;
+        index = (index + 1) % (macsLoaded + 1);
         buttonPressed = true;
     }
 
@@ -46,14 +52,21 @@ void MacDisplay::displayScreen() {
 
     display.print(WiFi.macAddress());
 
-    if (index == 0) {
-        int x = 17;
-        int y = 10;
+    display.drawLine(0, 10, 118, 10, SSD1306_WHITE);
 
-        display.setTextColor(SSD1306_BLACK);
-        display.fillRect(x - 1, y - 1, 86, 10, SSD1306_WHITE);
-        display.setCursor(x, y);
-        display.print("Get Random MAC");
+    int start = (index >= 5 ? index - 4 : 0);
+    for (int i = start; i < macsLoaded + 1; i++) {
+        int row = i - start;
+
+        if (index == i) {
+            display.fillRect(0, (row * 10) + 13, 118, 10, SSD1306_WHITE);
+            display.setTextColor(SSD1306_BLACK);
+        } else {
+            display.setTextColor(SSD1306_WHITE);
+        }
+
+        display.setCursor(1, (row * 10) + 14);
+        display.print(i == 0 ? "Get Random MAC" : macs[i - 1]);
     }
 
     renderSidebar(Icon::MASK, Icon::RIGHT_ARROW, Icon::TARGET, Icon::DOWN_ARROW, -99);
@@ -64,7 +77,7 @@ void MacDisplay::displayScreen() {
 void MacDisplay::onEnter() {
     WiFi.mode(WIFI_STA);
 
-    // Load saved MAC addresses
+    macsLoaded = SDManager::listMACs(macs, MAX_MACS);
 }
 
 void MacDisplay::onExit() {
