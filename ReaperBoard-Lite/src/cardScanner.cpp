@@ -46,10 +46,23 @@ void ScannerDisplay::displayScreen() {
 
     display.println("UID:");
     for (uint8_t i : uid) {
-        display.print(i);
+        display.print(i, HEX);
+        display.print(" ");
     };
+    display.println();
 
-    renderSidebar(Icon::WIFI, Icon::UP_ARROW, Icon::RIGHT_ARROW, Icon::DOWN_ARROW, -99);
+    display.println("atqa:");
+    for (uint8_t i : atqa) {
+        display.print(i, HEX);
+        display.print(" ");
+    };
+    display.println();
+
+    display.println("SAK:");
+    display.print(sak, HEX);
+    display.println();
+
+    renderSidebar(Icon::RFID, Icon::UP_ARROW, Icon::RIGHT_ARROW, Icon::DOWN_ARROW, -99);
 
     display.display();
 }
