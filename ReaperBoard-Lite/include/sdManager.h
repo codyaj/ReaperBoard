@@ -15,6 +15,8 @@
 #define DEFAULT_PASSCODE "333333"
 #define DEFAULT_SCREEN_TIMEOUT 120
 
+#define TAMPER_THRESHOLD 900
+
 namespace SDManager {
     void begin();
 

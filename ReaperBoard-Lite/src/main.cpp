@@ -154,6 +154,10 @@ void loop() {
       menuDisplay.selectedItem = "";
     }
   } else {
+    if (SDManager::checkTamper()) {
+      Serial.println("Cleared the SD card");
+    }
+
     if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
       loginDisplay.displayScreen();
       lastDisplayUpdate = millis();

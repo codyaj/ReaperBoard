@@ -142,8 +142,10 @@ int SDManager::listMACs(String *names, int maxCount) {
             }
         }
 
+        file.close();
         file = dir.openNextFile();
     }
+    dir.close();
 
     return i;
 }
@@ -165,10 +167,49 @@ bool SDManager::loadMAC(const String &name, uint8_t *macAddress) {
         if (c == '\n' || c == '\r') break;
         mac += c;
     }
+    file.close();
 
     for (int i = 0; i < 6; i++) {
         macAddress[i] = strtoul(mac.substring(i * 2, i * 2 + 2).c_str(), NULL, 16);
     }
 
     return true;
+}
+
+namespace {
+    void deleteRecursive(File dir) {
+        if (!dir) return;
+        if (!dir.isDirectory()) return;
+
+        File file = dir.openNextFile();
+        while (file) {
+            String path = String(dir.name()) + "/" + String(file.name());
+            if (file.isDirectory()) {
+                File subdir = SD.open(path);
+                deleteRecursive(subdir);
+                subdir.close();
+                SD.rmdir(path.c_str());
+            } else {
+                SD.remove(path.c_str());
+            }
+            file.close();
+            file = dir.openNextFile();
+        }
+    }
+}
+
+bool SDManager::checkTamper() {
+    if (!SDCardPresent || !wipeOnTamper) {
+        return false;
+    }
+
+    int val = analogRead(A0);
+    if (val <= TAMPER_THRESHOLD) {
+        File root = SD.open("/");
+        deleteRecursive(root);
+        root.close();
+        logEvent("WIPE", "Device has been tampered with and wiped.");
+        return true;
+    }
+    return false;
 }

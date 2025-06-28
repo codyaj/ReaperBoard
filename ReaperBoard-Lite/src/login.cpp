@@ -45,20 +45,20 @@ void LoginDisplay::displayScreen() {
     display.setTextSize(1);
     display.setCursor(0,0);
 
-    char buffer[2];
-
     for (int row = 0; row < MENU_ROWS; row++) {
         for (int col = 0; col < MENU_COLS; col++) {
             display.setTextColor(SSD1306_WHITE);
 
-            strcpy_P(buffer, loginLayout[row][col]);
+            char buffer[2];
+            buffer[0] = pgm_read_byte(&loginLayout[row][col][0]);
+            buffer[1] = '\0';
 
             int x = 48 + col * (6 + 2);
             int y = 25 + row * (2 + 8);
 
             if (row == index[0] && col == index[1]) {
                 display.setTextColor(SSD1306_BLACK);
-                display.fillRect(x - 1, y - 1, 8, 10, SSD1306_WHITE);
+                display.fillRect(x - 1, y - 1, 7, 9, SSD1306_WHITE);
             }
             display.setCursor(x, y);
             display.print(buffer);
