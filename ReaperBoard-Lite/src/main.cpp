@@ -13,7 +13,10 @@ extern bool loggedIn;
 
 void setup() {
   Serial.begin(115200);
-  Serial.println(ESP.getResetReason());
+
+  WiFi.mode(WIFI_OFF);
+  WiFi.forceSleepBegin();
+  delay(1);
 
   SDManager::begin();
 
@@ -75,6 +78,11 @@ void loop() {
         runScreen(&wifiDisplay);
       } else if (menuDisplay.selectedItem == " Logout ") {
         loggedIn = false;
+
+        // Enter light sleep
+        WiFi.mode(WIFI_OFF);
+        WiFi.forceSleepBegin();
+        delay(1);
       } else if (menuDisplay.selectedItem == "MACSpoof") {
         runScreen(&macDisplay);
       } else if (menuDisplay.selectedItem == "DeAuther") {

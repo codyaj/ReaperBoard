@@ -21,6 +21,10 @@ bool LoginDisplay::scanInputs() {
         } else if (selectedChar == '*') {
             if (memcmp(enteredPasscode, passcode, 6) == 0) {
                 loggedIn = true;
+
+                // Exit light sleep
+                WiFi.forceSleepWake();
+                delay(1);
             }
             charIndex = 0;
             memset(enteredPasscode, 0, sizeof(enteredPasscode));

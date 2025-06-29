@@ -365,7 +365,7 @@ void DeauthDisplay::onExit() {
 }
 
 unsigned long lastAttack = 0;
-const unsigned long attackDelay = 10;
+const unsigned long attackDelay = 50;
 
 void DeauthDisplay::tick() {
     if (millis() - lastAttack >= attackDelay) {
