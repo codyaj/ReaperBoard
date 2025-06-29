@@ -70,6 +70,8 @@ private:
     int selectedNetworkIndex;
     int networksFound = 0;
     int index = 0;
+
+    void attack();
 protected:
     void onExit() override;
 public:
@@ -78,7 +80,7 @@ public:
     bool scanInputs() override;
     void displayScreen() override;
     void onEnter() override;
-    void attack();
+    void tick() override;
 };
 
 #endif

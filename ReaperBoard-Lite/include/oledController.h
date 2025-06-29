@@ -156,6 +156,7 @@ public:
     virtual bool scanInputs() = 0;
     virtual void displayScreen() = 0;
     virtual void onEnter() {}
+    virtual void tick() {}
 };
 
 #endif

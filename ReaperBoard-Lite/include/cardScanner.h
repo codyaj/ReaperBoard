@@ -21,13 +21,13 @@ private:
     uint8_t uid[7];
     uint8_t uidLength;
     int index = 0;
-protected:
-    void onExit() override;
+
+    bool scan();
 public:
     bool scanInputs() override;
     void displayScreen() override;
     void onEnter() override;
-    bool scan();
+    void tick() override;
 };
 
 #endif

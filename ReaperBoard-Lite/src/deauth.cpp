@@ -363,3 +363,13 @@ void DeauthDisplay::onExit() {
         clients = nullptr;
     }
 }
+
+unsigned long lastAttack = 0;
+const unsigned long attackDelay = 10;
+
+void DeauthDisplay::tick() {
+    if (millis() - lastAttack >= attackDelay) {
+        attack();
+        lastAttack = millis();
+    }
+}

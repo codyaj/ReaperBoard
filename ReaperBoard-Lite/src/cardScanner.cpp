@@ -75,6 +75,13 @@ void ScannerDisplay::onEnter() {
     initPN532();
 }
 
-void ScannerDisplay::onExit() {
-    
+unsigned long lastPosScan = 0;
+const unsigned long scanDelay = 500;
+
+void ScannerDisplay::tick() {
+    if (millis() - lastPosScan >= scanDelay) {
+        if (scan()) {
+            lastPosScan = millis();
+        }
+    }
 }

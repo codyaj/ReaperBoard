@@ -33,100 +33,32 @@ const unsigned long displayUpdateInterval = 250;
 unsigned long lastButtonUpdate = 0;
 const unsigned long debounceDelay = 250;
 
-void showWifiPage() {
-  wifiDisplay.onEnter();
+void runScreen(OLEDDisplay* currentScreen) {
+  if (!currentScreen) return; // safety check
+
+  awaitingExit = false;
+  currentScreen->onEnter();
 
   while (!awaitingExit) {
     if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
-      wifiDisplay.displayScreen();
+      currentScreen->displayScreen();
       lastDisplayUpdate = millis();
     }
 
     if (millis() - lastButtonUpdate >= debounceDelay) {
-      if (wifiDisplay.scanInputs()) {
-        lastButtonUpdate = millis();
-      }
-    }
-  }
-}
-
-void showMacPage() {
-  macDisplay.onEnter();
-
-  while (!awaitingExit) {
-    if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
-      macDisplay.displayScreen();
-      lastDisplayUpdate = millis();
-    }
-
-    if (millis() - lastButtonUpdate >= debounceDelay) {
-      if (macDisplay.scanInputs()) {
-        lastButtonUpdate = millis();
-      }
-    }
-  }
-}
-
-unsigned long lastAttack = 0;
-const unsigned long attackDelay = 10;
-
-void showDeauthPage() {
-  deauthDisplay.onEnter();
-
-  while (!awaitingExit) {
-    if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
-      deauthDisplay.displayScreen();
-      lastDisplayUpdate = millis();
-    }
-
-    if (millis() - lastButtonUpdate >= debounceDelay) {
-      if (deauthDisplay.scanInputs()) {
+      if (currentScreen->scanInputs()) {
         lastButtonUpdate = millis();
       }
     }
 
-    if (millis() - lastAttack >= attackDelay) {
-      deauthDisplay.attack();
-      lastAttack = millis();
-    }
+    currentScreen->tick();
 
-    delay(1); // avoid watchdog reset
+    SDManager::checkTamper();
   }
 }
-
-unsigned long lastPosScan = 0;
-const unsigned long scanDelay = 500;
-
-void showRFIDPage() {
-  scannerDisplay.onEnter();
-
-  while (!awaitingExit) {
-    if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
-      scannerDisplay.displayScreen();
-      lastDisplayUpdate = millis();
-    }
-
-    if (millis() - lastButtonUpdate >= debounceDelay) {
-      if (scannerDisplay.scanInputs()) {
-        lastButtonUpdate = millis();
-      }
-    }
-
-    if (millis() - lastPosScan >= scanDelay) {
-      if (scannerDisplay.scan()) {
-        lastPosScan = millis();
-      }
-    }
-
-    delay(1); // avoid watchdog reset
-  }
-}
-
 
 void loop() {
   if (loggedIn) {
-    awaitingExit = false;
-
     if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
       menuDisplay.displayScreen();
       lastDisplayUpdate = millis();
@@ -140,24 +72,20 @@ void loop() {
 
     if (menuDisplay.selectedItem != "") {
       if (menuDisplay.selectedItem == "WiFiScan") {
-        showWifiPage();
+        runScreen(&wifiDisplay);
       } else if (menuDisplay.selectedItem == " Logout ") {
         loggedIn = false;
       } else if (menuDisplay.selectedItem == "MACSpoof") {
-        showMacPage();
+        runScreen(&macDisplay);
       } else if (menuDisplay.selectedItem == "DeAuther") {
-        showDeauthPage();
+        runScreen(&deauthDisplay);
       } else if (menuDisplay.selectedItem == "RFID/NFC") {
-        showRFIDPage();
+        runScreen(&scannerDisplay);
       }
 
       menuDisplay.selectedItem = "";
     }
   } else {
-    if (SDManager::checkTamper()) {
-      Serial.println("Cleared the SD card");
-    }
-
     if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
       loginDisplay.displayScreen();
       lastDisplayUpdate = millis();
@@ -169,4 +97,6 @@ void loop() {
       }
     }
   }
+
+  SDManager::checkTamper();
 }
