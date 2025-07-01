@@ -10,6 +10,7 @@
 #define SETTINGS_FILE "/settings.json"
 #define LOG_FILE "/logs.txt"
 #define MAC_FOLDER "/macs"
+#define AP_FOLDER "/aps"
 #define MAX_LOG_SIZE 32768 // in bytes
 
 #define DEFAULT_PASSCODE "333333"
@@ -31,8 +32,8 @@ namespace SDManager {
     bool loadMAC(const String &name, uint8_t *macAddress);
 
     // APs
-    void listAPs(String *names, int maxCount);
-    void loadAP(const String &name, String &ssid, String &password, int &channel, String &webpage);
+    int listAPs(String *names, int maxCount);
+    bool loadAP(const String &name, String &ssid, String &mac, int &channel, String &webpage);
 
     // Tamper
     bool checkTamper();

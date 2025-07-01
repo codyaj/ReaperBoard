@@ -96,18 +96,40 @@ void SDManager::logEvent(const String &type, const String &message) {
     log.close();
 }
 
-bool isValidMac(const String &mac) {
-    if (mac.length() != 12) {
-        return false;
-    }
-
-    for (int i = 0; i < 12; i++) {
-        if (!isHexadecimalDigit(mac.charAt(i))) {
+namespace {
+    bool isValidMac(const String &mac) {
+        if (mac.length() != 12) {
             return false;
         }
+
+        for (int i = 0; i < 12; i++) {
+            if (!isHexadecimalDigit(mac.charAt(i))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    return true;
+    bool isValidAP(const String ssid, const String mac, const int channel, const String code) {
+        if (ssid.length() < 1 || ssid.length() > 31) return false;
+
+        if (mac.length() != 12 && mac.length() != 0) return false;
+
+        if (mac.length() == 12) {
+            for (int i = 0; i < 12; i++) {
+                if (!isHexadecimalDigit(mac.charAt(i))) {
+                    return false;
+                }
+            }
+        }
+        
+        if (channel < 1 || channel > 13) return false;
+
+        if (code.length() == 0) return false;
+
+        return true;
+    }
 }
 
 int SDManager::listMACs(String *names, int maxCount) {
@@ -174,6 +196,96 @@ bool SDManager::loadMAC(const String &name, uint8_t *macAddress) {
     }
 
     return true;
+}
+
+int SDManager::listAPs(String *names, int maxCount) {
+    if (!SDCardPresent) {
+        return 0;
+    }
+
+    File dir = SD.open(AP_FOLDER);
+    if (!dir) {
+        logEvent("SDManager", "Failed to open folder containing APs: " + String(AP_FOLDER));
+        return 0;
+    }
+    if (!dir.isDirectory()) {
+        logEvent("SDManager", "Folder containing APs is NOT a folder: " + String(AP_FOLDER));
+        return 0;
+    }
+
+    File file = dir.openNextFile();
+    int i = 0;
+    while (file && i < maxCount) {
+        if (!file.isDirectory()) {
+            String ssid = "";
+            String mac = "";
+            int channel = -99;
+            String code = "";
+
+            int lineNum = 0;
+            while (file.available()) {
+                String line = file.readStringUntil('\n');
+                line.trim();
+
+                if (lineNum == 0) {
+                    ssid = line;
+                } else if (lineNum == 1) {
+                    mac = line;
+                } else if (lineNum == 2) {
+                    channel = line.toInt();
+                } else {
+                    code += line + "\n";
+                }
+
+                lineNum++;
+            }
+
+            if (isValidAP(ssid, mac, channel, code)) {
+                names[i] = file.name();
+                i++;
+            }
+        }
+
+        file.close();
+        file = dir.openNextFile();
+    }
+    dir.close();
+
+    return i;
+}
+
+bool SDManager::loadAP(const String &name, String &ssid, String &mac, int &channel, String &webpage) {
+    if (!SDCardPresent) {
+        return false;
+    }
+
+    File file = SD.open(AP_FOLDER + String("/") + name);
+    if (!file) {
+        logEvent("SDManager", "Failed to open file containing AP: " + String(AP_FOLDER) + String("/") + name);
+        return false;
+    }
+
+    int lineNum = 0;
+    while (file.available()) {
+        String line = file.readStringUntil('\n');
+        line.trim();
+
+        if (lineNum == 0) {
+            ssid = line;
+        } else if (lineNum == 1) {
+            mac = line;
+        } else if (lineNum == 2) {
+            channel = line.toInt();
+        } else {
+            webpage += line + "\n";
+        }
+
+        lineNum++;
+    }
+
+    file.close();
+
+    return isValidAP(ssid, mac, channel, webpage);
 }
 
 namespace {

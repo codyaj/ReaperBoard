@@ -12,5 +12,6 @@
 #include "cardScanner.h"
 #include "oledController.h"
 #include "sdManager.h"
+#include "badAP.h"
 
 #endif

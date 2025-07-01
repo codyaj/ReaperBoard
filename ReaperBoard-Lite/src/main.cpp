@@ -6,6 +6,7 @@ LoginDisplay loginDisplay;
 MacDisplay macDisplay;
 DeauthDisplay deauthDisplay;
 ScannerDisplay scannerDisplay;
+BadAPDisplay badAPDisplay;
 
 extern bool awaitingExit;
 extern bool loggedIn;
@@ -57,6 +58,8 @@ void runScreen(OLEDDisplay* currentScreen) {
     currentScreen->tick();
 
     SDManager::checkTamper();
+
+    delay(1);
   }
 }
 
@@ -89,6 +92,8 @@ void loop() {
         runScreen(&deauthDisplay);
       } else if (menuDisplay.selectedItem == "RFID/NFC") {
         runScreen(&scannerDisplay);
+      } else if (menuDisplay.selectedItem == " Bad-AP ") {
+        runScreen(&badAPDisplay);
       }
 
       menuDisplay.selectedItem = "";
