@@ -11,6 +11,8 @@
 #define MENU_ROWS 3
 #define MENU_COLS 2
 
+#define MENU_ROWS_TOTAL 4
+
 // Reaper banner
 const unsigned char reaperBitmap [] PROGMEM = {
 	0x00, 0x0f, 0xe0, 0x00, 0x1f, 0xf1, 0xff, 0x00, 0x1f, 0xc7, 0xfd, 0xff, 0x01, 0x00, 0x00, 0x10, 
@@ -33,15 +35,16 @@ const unsigned char reaperBitmap [] PROGMEM = {
 	0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-const char menuLayout[MENU_ROWS][MENU_COLS][9] PROGMEM = {
+const char menuLayout[MENU_ROWS_TOTAL][MENU_COLS][9] PROGMEM = {
     {"WiFiScan", " Bad-AP "},
     {"RFID/NFC", "DeAuther"},
-    {"MACSpoof", " Logout "}
+    {"MACSpoof", " Logout "},
+	{"BeacSpam", "  Data  "}
 };
 
 class MenuDisplay : public OLEDDisplay {
 private:
-    int index[2] = {0, 0};
+    int index[2] = {0, 0}; // {row, col}
 public:
     String selectedItem = "";
     
