@@ -288,6 +288,30 @@ bool SDManager::loadAP(const String &name, String &ssid, String &mac, int &chann
     return isValidAP(ssid, mac, channel, webpage);
 }
 
+void SDManager::logData(const String &apName, const String &message) {
+    if (!SDCardPresent) {
+        return;
+    }
+
+    String filename;
+    do {
+        filename = DATA_FOLDER + '/' + String(os_random()) + ".log";
+    } while (SD.exists(filename));
+
+
+    File log = SD.open(filename, FILE_WRITE);
+    if (!log) {
+        Serial.println("Failed to open new data file: " + filename);
+        return;
+    }
+
+    log.print("[");
+    log.print(apName);
+    log.print("] ");
+    log.println(message);
+    log.close();
+}
+
 namespace {
     void deleteRecursive(File dir) {
         if (!dir) return;

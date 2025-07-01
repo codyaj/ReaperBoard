@@ -11,6 +11,7 @@
 #define LOG_FILE "/logs.txt"
 #define MAC_FOLDER "/macs"
 #define AP_FOLDER "/aps"
+#define DATA_FOLDER "/data"
 #define MAX_LOG_SIZE 32768 // in bytes
 
 #define DEFAULT_PASSCODE "333333"
@@ -34,6 +35,7 @@ namespace SDManager {
     // APs
     int listAPs(String *names, int maxCount);
     bool loadAP(const String &name, String &ssid, String &mac, int &channel, String &webpage);
+    void logData(const String &apName, const String &message);
 
     // Tamper
     bool checkTamper();
