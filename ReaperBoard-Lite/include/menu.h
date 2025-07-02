@@ -39,7 +39,7 @@ const char menuLayout[MENU_ROWS_TOTAL][MENU_COLS][9] PROGMEM = {
     {"WiFiScan", " Bad-AP "},
     {"RFID/NFC", "DeAuther"},
     {"MACSpoof", " Logout "},
-	{"BeacSpam", "  Data  "}
+	{"  Data  ", "Sys-Info"}
 };
 
 class MenuDisplay : public OLEDDisplay {

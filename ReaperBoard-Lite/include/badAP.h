@@ -13,6 +13,7 @@
 #include "sdManager.h"
 
 #define MAX_APS 10
+#define MAX_PARAMS 5
 
 enum class ScreenStage {
     menu,

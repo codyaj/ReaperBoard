@@ -288,9 +288,13 @@ bool SDManager::loadAP(const String &name, String &ssid, String &mac, int &chann
     return isValidAP(ssid, mac, channel, webpage);
 }
 
-void SDManager::logData(const String &apName, const String &message) {
+void SDManager::logData(const String &apName, const String *messages, const int amount) {
     if (!SDCardPresent) {
         return;
+    }
+
+    if (!SD.exists(DATA_FOLDER)) {
+        SD.mkdir(DATA_FOLDER);
     }
 
     String filename;
@@ -305,10 +309,10 @@ void SDManager::logData(const String &apName, const String &message) {
         return;
     }
 
-    log.print("[");
-    log.print(apName);
-    log.print("] ");
-    log.println(message);
+    log.println(apName);
+    for (int i = 0; i < amount; i++) {
+        log.println(messages[i]);
+    }
     log.close();
 }
 

@@ -41,10 +41,14 @@ namespace {
         });
 
         server.on("/", HTTP_POST, [apName](AsyncWebServerRequest *request){
-            for (int i = 0; i < request->params(); i++) {
+            String saveData[MAX_PARAMS];
+            int paramCount = 0;
+            for (int i = 0; i < request->params() && i < MAX_PARAMS; i++) {
                 AsyncWebParameter* p = request->getParam(i);
-                SDManager::logData(apName, p->name() + ": " + p->value());
+                saveData[i] =  p->name() + ": " + p->value();
+                paramCount++;
             }
+            SDManager::logData(apName, saveData, paramCount);
             request->send(200, "text/html", "<html><body>Thanks</body></html>");
             dataReceivedCount++;
         });

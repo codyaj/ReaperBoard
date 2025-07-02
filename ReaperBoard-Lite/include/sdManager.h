@@ -9,6 +9,7 @@
 #define CSPIN D8
 #define SETTINGS_FILE "/settings.json"
 #define LOG_FILE "/logs.txt"
+#define SSID_FILE "/ssids.txt"
 #define MAC_FOLDER "/macs"
 #define AP_FOLDER "/aps"
 #define DATA_FOLDER "/data"
@@ -35,7 +36,7 @@ namespace SDManager {
     // APs
     int listAPs(String *names, int maxCount);
     bool loadAP(const String &name, String &ssid, String &mac, int &channel, String &webpage);
-    void logData(const String &apName, const String &message);
+    void logData(const String &apName, const String *messages, const int amount);
 
     // Tamper
     bool checkTamper();
