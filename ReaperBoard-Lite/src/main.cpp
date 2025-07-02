@@ -7,6 +7,7 @@ MacDisplay macDisplay;
 DeauthDisplay deauthDisplay;
 ScannerDisplay scannerDisplay;
 BadAPDisplay badAPDisplay;
+SysInfoDisplay sysInfoDisplay;
 
 extern bool awaitingExit;
 extern bool loggedIn;
@@ -94,6 +95,8 @@ void loop() {
         runScreen(&scannerDisplay);
       } else if (menuDisplay.selectedItem == " Bad-AP ") {
         runScreen(&badAPDisplay);
+      } else if (menuDisplay.selectedItem == "Sys-Info") {
+        runScreen(&sysInfoDisplay);
       }
 
       menuDisplay.selectedItem = "";

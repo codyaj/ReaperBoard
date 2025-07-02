@@ -25,6 +25,7 @@ namespace SDManager {
 
     // Settings
     void loadSettings(String &passcode, int &screenTimeout);
+    void setScreenTimeout(int screenTimeout);
 
     // Logs
     void logEvent(const String &type, const String &message);
@@ -40,6 +41,9 @@ namespace SDManager {
 
     // Tamper
     bool checkTamper();
+
+    // Erasing
+    void removeAllData();
 }
 
 #endif

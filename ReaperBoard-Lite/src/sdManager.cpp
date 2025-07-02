@@ -59,6 +59,47 @@ void SDManager::loadSettings(String &passcode, int &screenTimeout) {
     screenTimeout = doc["screenTimeout"] | DEFAULT_SCREEN_TIMEOUT;
 }
 
+void SDManager::setScreenTimeout(int screenTimeout) {
+    if (!SDCardPresent) {
+        return;
+    }
+
+    File file = SD.open(SETTINGS_FILE, FILE_READ);
+    if (!file) {
+        logEvent("SDManager", "Failed to open settings for reading: " + String(SETTINGS_FILE));
+        return;
+    }
+
+    JsonDocument doc;
+    DeserializationError error = deserializeJson(doc, file);
+    file.close();
+
+    if (error) {
+        Serial.println("JSON parse error: ");
+        Serial.println(error.c_str());
+
+        logEvent("SDManager", "JSON parse error: " + String(error.c_str()));
+
+        return;
+    }
+
+    doc["screenTimeout"] = screenTimeout;
+
+    file = SD.open(SETTINGS_FILE, FILE_WRITE);
+    if (!file) {
+        logEvent("SDManager", "Failed to open settings for writing: " + String(SETTINGS_FILE));
+        return;
+    }
+
+    file.seek(0);
+    file.truncate(0);
+
+    if (serializeJson(doc, file) == 0) {
+        logEvent("SDManager", "Failed to write settings");
+    }
+    file.close();
+}
+
 void SDManager::logEvent(const String &type, const String &message) {
     if (!SDCardPresent || !enableLogs) {
         return;
@@ -299,7 +340,7 @@ void SDManager::logData(const String &apName, const String *messages, const int 
 
     String filename;
     do {
-        filename = DATA_FOLDER + '/' + String(os_random()) + ".log";
+        filename = String(DATA_FOLDER) + "/" + String(os_random()) + ".log";
     } while (SD.exists(filename));
 
 
@@ -345,11 +386,15 @@ bool SDManager::checkTamper() {
 
     int val = analogRead(A0);
     if (val <= TAMPER_THRESHOLD) {
-        File root = SD.open("/");
-        deleteRecursive(root);
-        root.close();
-        logEvent("WIPE", "Device has been tampered with and wiped.");
+        removeAllData();
         return true;
     }
     return false;
+}
+
+void SDManager::removeAllData() {
+    File root = SD.open("/");
+    deleteRecursive(root);
+    root.close();
+    logEvent("WIPE", "Device has been wiped.");
 }

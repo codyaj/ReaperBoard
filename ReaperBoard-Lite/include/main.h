@@ -13,5 +13,6 @@
 #include "oledController.h"
 #include "sdManager.h"
 #include "badAP.h"
+#include "sysInfo.h"
 
 #endif
