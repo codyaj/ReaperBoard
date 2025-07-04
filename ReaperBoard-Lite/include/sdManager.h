@@ -39,6 +39,10 @@ namespace SDManager {
     bool loadAP(const String &name, String &ssid, String &mac, int &channel, String &webpage);
     void logData(const String &apName, const String *messages, const int amount);
 
+    // Saved Data
+    int listData(String *names, int maxCount);
+    bool loadData(const String &name, String &data);
+
     // Tamper
     bool checkTamper();
 

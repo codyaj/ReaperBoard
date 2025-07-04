@@ -8,6 +8,7 @@ DeauthDisplay deauthDisplay;
 ScannerDisplay scannerDisplay;
 BadAPDisplay badAPDisplay;
 SysInfoDisplay sysInfoDisplay;
+DataDisplayDisplay dataDisplayDisplay;
 
 extern bool awaitingExit;
 extern bool loggedIn;
@@ -97,6 +98,8 @@ void loop() {
         runScreen(&badAPDisplay);
       } else if (menuDisplay.selectedItem == "Sys-Info") {
         runScreen(&sysInfoDisplay);
+      } else if (menuDisplay.selectedItem == "  Data  ") {
+        runScreen(&dataDisplayDisplay);
       }
 
       menuDisplay.selectedItem = "";

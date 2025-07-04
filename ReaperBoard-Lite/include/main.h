@@ -14,5 +14,6 @@
 #include "sdManager.h"
 #include "badAP.h"
 #include "sysInfo.h"
+#include "dataDisplay.h"
 
 #endif

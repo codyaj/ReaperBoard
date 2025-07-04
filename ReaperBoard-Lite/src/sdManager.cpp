@@ -357,6 +357,62 @@ void SDManager::logData(const String &apName, const String *messages, const int 
     log.close();
 }
 
+int SDManager::listData(String *names, int maxCount) {
+    if (!SDCardPresent) {
+        return 0;
+    }
+
+    File dir = SD.open(DATA_FOLDER);
+    if (!dir) {
+        logEvent("SDManager", "Failed to open folder containing data: " + String(DATA_FOLDER));
+        return 0;
+    }
+    if (!dir.isDirectory()) {
+        logEvent("SDManager", "Folder containing Data is NOT a folder: " + String(DATA_FOLDER));
+        return 0;
+    }
+
+    File file = dir.openNextFile();
+    int i = 0;
+    while (file && i < maxCount) {
+        if (file.isFile()) {
+            names[i] = String(file.name());
+            i++;
+        }
+
+        file.close();
+        file = dir.openNextFile();
+    }
+    dir.close();
+
+    return i;
+}
+
+bool SDManager::loadData(const String &name, String &data) {
+        if (!SDCardPresent) {
+        return false;
+    }
+
+    File file = SD.open(DATA_FOLDER + String("/") + name);
+    if (!file || file.isDirectory()) {
+        logEvent("SDManager", "Invalid file: " + String(DATA_FOLDER) + String("/") + name);
+        return false;
+    }
+
+    data = "";
+
+    while (file.available()) {
+        String line = file.readStringUntil('\n');
+        line.trim();
+
+        data += line + "\n";
+    }
+
+    file.close();
+
+    return true;
+}
+
 namespace {
     void deleteRecursive(File dir) {
         if (!dir) return;
