@@ -1,3 +1,5 @@
+![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)
+![Platform](https://img.shields.io/badge/platform-ESP8266|CM4-blue)
 # ReaperBoard
 
 ReaperBoard is a modular, multi-platform wireless security toolkit designed for ethical penetration testing and hardware hacking. It currently includes two main versions:
@@ -17,19 +19,19 @@ ReaperBoard aims to provide an extensible, open-source platform for wireless sec
 
 ### ReaperBoard-Lite (ESP8266-12E)
 
-- Wi-Fi network scanning and signal analysis  
-- Bad Access Point (AP) emulation  
-- Deauthentication attack module  
-- MAC address spoofing  
-- RFID/NFC reading and cloning  
-- Customizable profiles and onboard storage  
-- Self-destruct mechanism on tamper detection  
-- PIN entry security  
+- Wi-Fi network scanning
+- Custom Bad Access Point (AP) emulation
+- Deauthentication attack module
+- MAC address spoofing
+- RFID/NFC reading and saving
+- Self-destruct mechanism on tamper detection
+- PIN entry security
 
 ### ReaperBoard-Full (Raspberry Pi CM4) *(coming soon)*
 
 - Everything from Lite version  
-- Packet sniffing and logging  
+- Packet sniffing and logging
+- Packet analysis
 - Signal jamming  
 - Wi-Fi brute force attacks  
 - Extended storage and advanced UI  
@@ -68,3 +70,5 @@ This project is licensed under the GNU General Public License v3 (GPLv3). See th
 ReaperBoard is designed for ethical use only. Unauthorized access to networks or devices is illegal and unethical. Use responsibly and with permission.
 
 ---
+
+> Note: The ReaperBoard-Lite and Full are actively in development. Contributions are welcome!
