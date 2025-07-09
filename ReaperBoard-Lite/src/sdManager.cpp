@@ -9,10 +9,8 @@ namespace SDManager {
 void SDManager::begin() {
     SPI.begin();
     if (!SD.begin(CSPIN)) {
-        Serial.println("Card failed, or not present.");
         SDCardPresent = false;
     }
-    Serial.println("Card was read!");
 }
 
 void SDManager::loadSettings(String &passcode, int &screenTimeout) {
@@ -25,7 +23,6 @@ void SDManager::loadSettings(String &passcode, int &screenTimeout) {
 
     File file = SD.open(SETTINGS_FILE, "r");
     if (!file) {
-        Serial.println("Failed to open settings.json for reading");
         enableLogs = true;
         wipeOnTamper = false;
         passcode = DEFAULT_PASSCODE;
@@ -41,8 +38,6 @@ void SDManager::loadSettings(String &passcode, int &screenTimeout) {
     file.close();
 
     if (error) {
-        Serial.println("JSON parse error: ");
-        Serial.println(error.c_str());
         enableLogs = true;
         wipeOnTamper = false;
         passcode = DEFAULT_PASSCODE;
@@ -75,9 +70,6 @@ void SDManager::setScreenTimeout(int screenTimeout) {
     file.close();
 
     if (error) {
-        Serial.println("JSON parse error: ");
-        Serial.println(error.c_str());
-
         logEvent("SDManager", "JSON parse error: " + String(error.c_str()));
 
         return;
@@ -107,7 +99,6 @@ void SDManager::logEvent(const String &type, const String &message) {
 
     File log = SD.open(LOG_FILE, FILE_WRITE);
     if (!log) {
-        Serial.println("Failed to open log file");
         return;
     }
 
@@ -117,7 +108,6 @@ void SDManager::logEvent(const String &type, const String &message) {
 
         log = SD.open(LOG_FILE, FILE_WRITE);
         if (!log) {
-            Serial.println("Failed to reopen log file after wipe");
             return;
         }
 
@@ -346,7 +336,6 @@ void SDManager::logData(const String &apName, const String *messages, const int 
 
     File log = SD.open(filename, FILE_WRITE);
     if (!log) {
-        Serial.println("Failed to open new data file: " + filename);
         return;
     }
 

@@ -11,7 +11,6 @@ void initPN532() {
 
     uint32_t versiondata = nfc.getFirmwareVersion();
     if (!versiondata) {
-        Serial.println("Didn't find PN53x board");
         SDManager::logEvent("Card Scanner", "Didn't find PN53x board");
         while (1) delay(10);
     }

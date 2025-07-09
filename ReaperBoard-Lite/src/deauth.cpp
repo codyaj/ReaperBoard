@@ -40,7 +40,7 @@ ClientInfo* DeauthDisplay::findClientByMac(uint8_t* addr) {
     }
     
     if (clientIndex >= MAX_CLIENTS - 1) {
-        Serial.println("At max clients!");
+        SDManager::logEvent("DEAUTHER", "At max clients. Cannot allocate anymore.");
         return nullptr;
     }
     ClientInfo* rtnVal = &clients[clientIndex];
@@ -105,14 +105,6 @@ void DeauthDisplay::handleData(uint8_t* receiverMac, uint8_t* transmitterMac, ui
         receiver->direction = Direction::UNKNOWN;
         transmitter->direction = Direction::UNKNOWN;
     }
-}
-
-void print_mac(const uint8_t *mac) {
-  for (int i = 0; i < 6; i++) {
-    if (i) Serial.print(":");
-    if (mac[i] < 16) Serial.print("0");
-    Serial.print(mac[i], HEX);
-  }
 }
 
 void DeauthDisplay::snifferCallback(uint8_t *buf, uint16_t len) {
@@ -190,11 +182,8 @@ bool DeauthDisplay::scanInputs() {
             clients = nullptr;
 
             currStage = AttackStage::DEAUTHING;
-
-            Serial.println("setting currstage");
         } else {
             // Toggle deauth attack
-            Serial.println("toggle attackToggle");
             attackToggle = !attackToggle;
         }
         buttonPressed = true;
@@ -295,7 +284,6 @@ void DeauthDisplay::displayScreen() {
 
 void DeauthDisplay::attack() {
     if (attackToggle && currStage == AttackStage::DEAUTHING) {
-        Serial.println("Attack running!");
         uint8_t packet[26] = {
             0xC0, 0x00, // Type: deauth (0xC0), Flags: 0x00
             0x00, 0x00, // Duration
@@ -339,7 +327,7 @@ void DeauthDisplay::onEnter() {
     if (clients) {
         memset(clients, 0, sizeof(ClientInfo) * MAX_CLIENTS);
     } else {
-        Serial.println("Unable to allocate memory for the clients. Please restart.");
+        SDManager::logEvent("DEAUTHER", "Unable to allocate memory to accommodate clients");
         while (1);
     }
     WiFi.mode(WIFI_STA);

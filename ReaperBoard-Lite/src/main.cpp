@@ -25,8 +25,6 @@ void logout() {
 
 
 void setup() {
-  Serial.begin(115200);
-
   WiFi.mode(WIFI_OFF);
   WiFi.forceSleepBegin();
   delay(1);
