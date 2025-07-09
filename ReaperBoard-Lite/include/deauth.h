@@ -81,6 +81,7 @@ public:
     void displayScreen() override;
     void onEnter() override;
     void tick() override;
+    bool timeoutEnabled() override;
 };
 
 #endif

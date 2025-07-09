@@ -155,6 +155,7 @@ protected:
 public:
     virtual bool scanInputs() = 0;
     virtual void displayScreen() = 0;
+    virtual bool timeoutEnabled() { return true; }
     virtual void onEnter() {}
     virtual void tick() {}
 };

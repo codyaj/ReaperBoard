@@ -83,3 +83,7 @@ void MacDisplay::onEnter() {
 void MacDisplay::onExit() {
     // Unload saved MAC addresses
 }
+
+bool MacDisplay::timeoutEnabled() {
+    return true;
+}

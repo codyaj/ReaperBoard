@@ -17,13 +17,14 @@ class SysInfoDisplay : public OLEDDisplay {
 private:
     int index = 0;
     int screenTimeoutIndex = SCREEN_TIMEOUT_TIMES_TOTAL;
-    int screenTimeout = 0;
+    int setScreenTimeout = 0;
     int originalScreenTimeout;
     bool resetDeviceConfirmation = false;
 public:
     bool scanInputs() override;
     void displayScreen() override;
     void onEnter() override;
+    bool timeoutEnabled() override;
 };
 
 #endif

@@ -90,3 +90,7 @@ void WiFiDisplay::onExit() {
         WiFi.scanDelete();
     }
 }
+
+bool WiFiDisplay::timeoutEnabled() {
+    return true;
+}

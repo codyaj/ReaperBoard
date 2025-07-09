@@ -88,3 +88,7 @@ void DataDisplayDisplay::onEnter() {
     dataLoaded = SDManager::listData(dataList, MAX_DATA);
     currentPage = CurrentPage::DATA_LIST_PAGE;
 }
+
+bool DataDisplayDisplay::timeoutEnabled() {
+    return true;
+}

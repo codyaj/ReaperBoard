@@ -2,6 +2,7 @@
 
 extern Adafruit_SSD1306 display;
 extern bool awaitingExit;
+int screenTimeout; // Seconds
 
 int screenTimeoutTimes[SCREEN_TIMEOUT_TIMES_TOTAL] = {30, 60, 120, 300, 600, 999999};
 
@@ -17,11 +18,12 @@ bool SysInfoDisplay::scanInputs() {
         if (index == 0) {
             screenTimeoutIndex = (screenTimeoutIndex + 1) % (SCREEN_TIMEOUT_TIMES_TOTAL + 1);
             if (screenTimeoutIndex == SCREEN_TIMEOUT_TIMES_TOTAL) {
-                screenTimeout = originalScreenTimeout;
+                setScreenTimeout = originalScreenTimeout;
             } else {
-                screenTimeout = screenTimeoutTimes[screenTimeoutIndex];
+                setScreenTimeout = screenTimeoutTimes[screenTimeoutIndex];
             }
-            SDManager::setScreenTimeout(screenTimeout);
+            SDManager::setScreenTimeout(setScreenTimeout);
+            screenTimeout = setScreenTimeout;
         } else if (index == 1) {
             if (resetDeviceConfirmation) {
                 SDManager::removeAllData();
@@ -52,7 +54,7 @@ void SysInfoDisplay::displayScreen() {
 
     display.setCursor(1,1);
     display.setTextColor(index == 0 ? SSD1306_BLACK : SSD1306_WHITE);
-    display.print(screenTimeout);
+    display.print(setScreenTimeout);
 
     display.setCursor(1,11);
     display.setTextColor(index == 1 ? SSD1306_BLACK : SSD1306_WHITE);
@@ -103,5 +105,9 @@ void SysInfoDisplay::displayScreen() {
 
 void SysInfoDisplay::onEnter() {
     String passcode;
-    SDManager::loadSettings(passcode, screenTimeout);
+    SDManager::loadSettings(passcode, setScreenTimeout);
+}
+
+bool SysInfoDisplay::timeoutEnabled() {
+    return true;
 }

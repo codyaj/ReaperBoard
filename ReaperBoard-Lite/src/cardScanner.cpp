@@ -85,3 +85,7 @@ void ScannerDisplay::tick() {
         }
     }
 }
+
+bool ScannerDisplay::timeoutEnabled() {
+    return false;
+}

@@ -20,6 +20,7 @@ public:
     bool scanInputs() override;
     void displayScreen() override;
     void onEnter() override;
+    bool timeoutEnabled() override;
 };
 
 #endif

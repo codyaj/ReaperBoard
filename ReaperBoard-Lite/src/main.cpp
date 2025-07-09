@@ -12,6 +12,16 @@ DataDisplayDisplay dataDisplayDisplay;
 
 extern bool awaitingExit;
 extern bool loggedIn;
+extern int screenTimeout; // Seconds
+
+void logout() {
+  loggedIn = false;
+
+  // Enter light sleep
+  WiFi.mode(WIFI_OFF);
+  WiFi.forceSleepBegin();
+  delay(1);
+}
 
 
 void setup() {
@@ -24,7 +34,6 @@ void setup() {
   SDManager::begin();
 
   String passcode;
-  int screenTimeout;
   
   SDManager::loadSettings(passcode, screenTimeout);
 
@@ -57,6 +66,13 @@ void runScreen(OLEDDisplay* currentScreen) {
       }
     }
 
+    if (currentScreen->timeoutEnabled()) {
+      if ((millis() - lastButtonUpdate) >= ((long unsigned int)screenTimeout * 1000)) {
+        logout();
+        awaitingExit = true;
+      }
+    }
+
     currentScreen->tick();
 
     SDManager::checkTamper();
@@ -78,16 +94,16 @@ void loop() {
       }
     }
 
+    if ((millis() - lastButtonUpdate) >= ((long unsigned int)screenTimeout * 1000)) {
+      logout();
+      awaitingExit = true;
+    }
+
     if (menuDisplay.selectedItem != "") {
       if (menuDisplay.selectedItem == "WiFiScan") {
         runScreen(&wifiDisplay);
       } else if (menuDisplay.selectedItem == " Logout ") {
-        loggedIn = false;
-
-        // Enter light sleep
-        WiFi.mode(WIFI_OFF);
-        WiFi.forceSleepBegin();
-        delay(1);
+        logout();
       } else if (menuDisplay.selectedItem == "MACSpoof") {
         runScreen(&macDisplay);
       } else if (menuDisplay.selectedItem == "DeAuther") {

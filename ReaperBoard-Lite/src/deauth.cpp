@@ -373,3 +373,7 @@ void DeauthDisplay::tick() {
         lastAttack = millis();
     }
 }
+
+bool DeauthDisplay::timeoutEnabled() {
+    return false;
+}

@@ -149,3 +149,7 @@ void BadAPDisplay::onExit() {
 void BadAPDisplay::tick() {
     handleDNS();
 }
+
+bool BadAPDisplay::timeoutEnabled() {
+    return screenStage == ScreenStage::menu;
+}
