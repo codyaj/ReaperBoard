@@ -13,6 +13,13 @@ DataDisplayDisplay dataDisplayDisplay;
 extern bool awaitingExit;
 extern bool loggedIn;
 extern int screenTimeout; // Seconds
+extern Adafruit_SSD1306 display;
+
+bool screenOff = false;
+
+bool checkOffBtn() {
+  return digitalRead(OFF_SWITCH) == LOW;
+}
 
 void logout() {
   loggedIn = false;
@@ -25,6 +32,10 @@ void logout() {
 
 
 void setup() {
+  Serial.end();
+
+  pinMode(OFF_SWITCH, INPUT_PULLUP);
+  
   WiFi.mode(WIFI_OFF);
   WiFi.forceSleepBegin();
   delay(1);
@@ -65,7 +76,7 @@ void runScreen(OLEDDisplay* currentScreen) {
     }
 
     if (currentScreen->timeoutEnabled()) {
-      if ((millis() - lastButtonUpdate) >= ((long unsigned int)screenTimeout * 1000)) {
+      if ((millis() - lastButtonUpdate) >= ((long unsigned int)screenTimeout * 1000) || checkOffBtn()) {
         logout();
         awaitingExit = true;
       }
@@ -119,12 +130,22 @@ void loop() {
       menuDisplay.selectedItem = "";
     }
   } else {
-    if (millis() - lastDisplayUpdate >= displayUpdateInterval) {
+    bool offBtnPressed = checkOffBtn();
+
+    if (offBtnPressed && !screenOff) {
+      display.ssd1306_command(SSD1306_DISPLAYOFF);
+      screenOff = true;
+    } else if (!offBtnPressed && screenOff) {
+      display.ssd1306_command(SSD1306_DISPLAYON);
+      screenOff = false;
+    }
+
+    if (!screenOff && (millis() - lastDisplayUpdate >= displayUpdateInterval)) {
       loginDisplay.displayScreen();
       lastDisplayUpdate = millis();
     }
 
-    if (millis() - lastButtonUpdate >= debounceDelay) {
+    if (!screenOff && (millis() - lastButtonUpdate >= debounceDelay)) {
       if (loginDisplay.scanInputs()) {
         lastButtonUpdate = millis();
       }

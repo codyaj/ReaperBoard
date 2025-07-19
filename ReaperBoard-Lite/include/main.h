@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 
+#define OFF_SWITCH 3 // 3
+
 #include "scanWifi.h"
 #include "menu.h"
 #include "login.h"
