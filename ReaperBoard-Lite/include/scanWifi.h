@@ -9,6 +9,7 @@
 
 #include "oledController.h"
 
+#define maxLineLength 16
 
 class WiFiDisplay : public OLEDDisplay {
 private:

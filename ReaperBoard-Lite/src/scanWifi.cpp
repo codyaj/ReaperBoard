@@ -44,7 +44,16 @@ void WiFiDisplay::displayScreen() {
 
         display.print(index + 1);
         display.print(") ");
-        display.println(isHidden ? "<Hidden>" : ssid);
+        
+        String displaySSID = isHidden ? "<Hidden>" : ssid;
+        if (displaySSID.length() <= maxLineLength) {
+            display.println(displaySSID);
+        } else {
+            display.println(displaySSID.substring(0, maxLineLength));
+            display.print("   ");
+            display.println(displaySSID.substring(maxLineLength));
+        }
+
         display.println("===================");
 
         
