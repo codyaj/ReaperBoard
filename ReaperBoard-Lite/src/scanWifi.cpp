@@ -4,23 +4,20 @@ extern Adafruit_SSD1306 display;
 extern bool awaitingExit;
 
 bool WiFiDisplay::scanInputs() {
-    bool buttonPressed = false;
-
     if (digitalRead(FIRST_BUTTON) == LOW) {
         index = (index - 1 + networksFound) % networksFound;
-        buttonPressed = true;
+        return true;
     }
     if (digitalRead(SECOND_BUTTON) == LOW) {
         awaitingExit = true;
         onExit();
-        buttonPressed = true;
+        return true;
     }
     if (digitalRead(THIRD_BUTTON) == LOW) {
         index = (index + 1) % networksFound;
-        buttonPressed = true;
+        return true;
     }
-
-    return buttonPressed;
+    return false;
 }
 
 void WiFiDisplay::displayScreen() {
