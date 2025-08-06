@@ -4,23 +4,20 @@ extern Adafruit_SSD1306 display;
 extern bool awaitingExit;
 
 bool WiFiDisplay::scanInputs() {
-    bool buttonPressed = false;
-
     if (digitalRead(FIRST_BUTTON) == LOW) {
         index = (index - 1 + networksFound) % networksFound;
-        buttonPressed = true;
+        return true;
     }
     if (digitalRead(SECOND_BUTTON) == LOW) {
         awaitingExit = true;
         onExit();
-        buttonPressed = true;
+        return true;
     }
     if (digitalRead(THIRD_BUTTON) == LOW) {
         index = (index + 1) % networksFound;
-        buttonPressed = true;
+        return true;
     }
-
-    return buttonPressed;
+    return false;
 }
 
 void WiFiDisplay::displayScreen() {
@@ -42,7 +39,18 @@ void WiFiDisplay::displayScreen() {
 
         WiFi.getNetworkInfo(index, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
 
-        display.println(String(index + 1) + ") " + (isHidden ? "<Hidden>" : ssid));
+        display.print(index + 1);
+        display.print(") ");
+        
+        String displaySSID = isHidden ? "<Hidden>" : ssid;
+        if (displaySSID.length() <= maxLineLength) {
+            display.println(displaySSID);
+        } else {
+            display.println(displaySSID.substring(0, maxLineLength));
+            display.print("   ");
+            display.println(displaySSID.substring(maxLineLength));
+        }
+
         display.println("===================");
 
         
@@ -59,18 +67,19 @@ void WiFiDisplay::displayScreen() {
             display.println("BSSID: N/A");
         }
 
-        String encStr;
-        switch (encryptionType) {
-            case ENC_TYPE_NONE:   encStr = "Open"; break;
-            case ENC_TYPE_WEP:    encStr = "WEP"; break;
-            case ENC_TYPE_TKIP:   encStr = "WPA/TKIP"; break;
-            case ENC_TYPE_CCMP:   encStr = "WPA2/CCMP"; break;
-            case ENC_TYPE_AUTO:   encStr = "Auto"; break;
-            default:              encStr = "Unknown"; break;
-        }
-        display.println("Enc: " + encStr);
 
-        display.println("Ch: " + String(channel) + " (" + String(RSSI) + "dBm" + ")");
+        const char* encTypes[] = {
+            "Open", "WEP", "WPA/TKIP", "WPA2/CCMP", "Auto", "Unknown"
+        };
+        const char* encStr = (encryptionType >= 0 && encryptionType <= 4) ? encTypes[encryptionType] : encTypes[5];
+        display.print("Enc: ");
+        display.println(encStr);
+
+        display.print("Ch: ");
+        display.print(channel);
+        display.print(" (");
+        display.print(RSSI);
+        display.println("dBm)");
     } else {
         display.println("Loading...");
     }
