@@ -42,7 +42,9 @@ void WiFiDisplay::displayScreen() {
 
         WiFi.getNetworkInfo(index, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
 
-        display.println(String(index + 1) + ") " + (isHidden ? "<Hidden>" : ssid));
+        display.print(index + 1);
+        display.print(") ");
+        display.println(isHidden ? "<Hidden>" : ssid);
         display.println("===================");
 
         
@@ -59,18 +61,19 @@ void WiFiDisplay::displayScreen() {
             display.println("BSSID: N/A");
         }
 
-        String encStr;
-        switch (encryptionType) {
-            case ENC_TYPE_NONE:   encStr = "Open"; break;
-            case ENC_TYPE_WEP:    encStr = "WEP"; break;
-            case ENC_TYPE_TKIP:   encStr = "WPA/TKIP"; break;
-            case ENC_TYPE_CCMP:   encStr = "WPA2/CCMP"; break;
-            case ENC_TYPE_AUTO:   encStr = "Auto"; break;
-            default:              encStr = "Unknown"; break;
-        }
-        display.println("Enc: " + encStr);
 
-        display.println("Ch: " + String(channel) + " (" + String(RSSI) + "dBm" + ")");
+        const char* encTypes[] = {
+            "Open", "WEP", "WPA/TKIP", "WPA2/CCMP", "Auto", "Unknown"
+        };
+        const char* encStr = (encryptionType >= 0 && encryptionType <= 4) ? encTypes[encryptionType] : encTypes[5];
+        display.print("Enc: ");
+        display.println(encStr);
+
+        display.print("Ch: ");
+        display.print(channel);
+        display.print(" (");
+        display.print(RSSI);
+        display.println("dBm)");
     } else {
         display.println("Loading...");
     }
