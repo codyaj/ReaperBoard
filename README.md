@@ -11,7 +11,7 @@ ReaperBoard is a modular, multi-platform wireless security toolkit designed for 
 
 ## Project Overview
 
-ReaperBoard aims to provide an extensible, open-source platform for wireless security researchers, pentesters, and hardware enthusiasts. By combining Wi-Fi, RFID, and network attack features into a single device (or set of devices), it enables flexible testing and exploration of wireless security vulnerabilities.
+ReaperBoard aims to provide an extensible, open-source platform for wireless security researchers, pentesters, and hardware enthusiasts. By combining Wi-Fi, RFID, and network attack features into a single device, it enables flexible testing and exploration of wireless security vulnerabilities.
 
 ---
 
