@@ -6,16 +6,272 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1024</width>
     <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar"/>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QStackedWidget" name="stackedWidget">
+    <property name="geometry">
+     <rect>
+      <x>-10</x>
+      <y>-11</y>
+      <width>1041</width>
+      <height>591</height>
+     </rect>
+    </property>
+    <widget class="QWidget" name="home">
+     <widget class="QPushButton" name="pushButton">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>200</y>
+        <width>86</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>PushButton</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="wifiNetworks">
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>270</y>
+        <width>86</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>PushButton</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>11</pointsize>
+    </font>
+   </property>
+   <widget class="QMenu" name="menuHome">
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Home</string>
+    </property>
+    <addaction name="actionHome"/>
+   </widget>
+   <widget class="QMenu" name="menuWiFi">
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>Wi-Fi</string>
+    </property>
+    <widget class="QMenu" name="menuAnalysis_Tools">
+     <property name="title">
+      <string>Analysis Tools</string>
+     </property>
+     <addaction name="actionPacket_Sniffer"/>
+     <addaction name="actionChannel_Graph"/>
+    </widget>
+    <widget class="QMenu" name="menuOther_Wi_Fi_Attacks">
+     <property name="title">
+      <string>Other Wi-Fi Attacks</string>
+     </property>
+     <addaction name="actionBeacon_Flood"/>
+     <addaction name="actionKarma_Attack"/>
+    </widget>
+    <addaction name="actionNetworks"/>
+    <addaction name="actionBad_AP_Emulator_2"/>
+    <addaction name="menuAnalysis_Tools"/>
+    <addaction name="menuOther_Wi_Fi_Attacks"/>
+   </widget>
+   <widget class="QMenu" name="menuRFID_NFC">
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="title">
+     <string>RFID / NFC</string>
+    </property>
+    <addaction name="actionRFID_NFC"/>
+   </widget>
+   <widget class="QMenu" name="menuPacket_RF">
+    <property name="title">
+     <string>RF</string>
+    </property>
+    <addaction name="actionBluetooth_BLE_Scan"/>
+    <addaction name="actionRF_Jamming"/>
+    <addaction name="actionSpectrum_Analyzer"/>
+   </widget>
+   <widget class="QMenu" name="menuDevice">
+    <property name="title">
+     <string>Device</string>
+    </property>
+    <addaction name="actionPIN_Lock"/>
+    <addaction name="actionSelf_Destruct"/>
+    <addaction name="actionMAC_Address_Spoofing"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionWi_FI_Settings"/>
+    <addaction name="actionRFID_NFC_Settings"/>
+    <addaction name="actionTheme_UI"/>
+    <addaction name="actionAbout_Legal"/>
+   </widget>
+   <addaction name="menuHome"/>
+   <addaction name="menuWiFi"/>
+   <addaction name="menuRFID_NFC"/>
+   <addaction name="menuPacket_RF"/>
+   <addaction name="menuDevice"/>
+   <addaction name="menuSettings"/>
+  </widget>
+  <action name="actionWi_Fi_Scanner">
+   <property name="text">
+    <string>Wi-Fi Scanner</string>
+   </property>
+  </action>
+  <action name="actionBad_AP_Emulator">
+   <property name="text">
+    <string>Bad AP Emulator</string>
+   </property>
+  </action>
+  <action name="actionNetworks">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Networks</string>
+   </property>
+  </action>
+  <action name="actionPacket_Sniffer">
+   <property name="text">
+    <string>Packet Sniffer</string>
+   </property>
+  </action>
+  <action name="actionClient_List">
+   <property name="text">
+    <string>Client List</string>
+   </property>
+  </action>
+  <action name="actionChannel_Graph">
+   <property name="text">
+    <string>Channel Graph</string>
+   </property>
+  </action>
+  <action name="actionBad_AP_Emulator_2">
+   <property name="text">
+    <string>Bad AP Emulator</string>
+   </property>
+  </action>
+  <action name="actionBeacon_Flood">
+   <property name="text">
+    <string>Beacon Flood</string>
+   </property>
+  </action>
+  <action name="actionKarma_Attack">
+   <property name="text">
+    <string>Karma Attack</string>
+   </property>
+  </action>
+  <action name="actionDeauth_Attack">
+   <property name="text">
+    <string>Deauth Attack</string>
+   </property>
+  </action>
+  <action name="actionEvil_Twin">
+   <property name="text">
+    <string>Evil Twin</string>
+   </property>
+  </action>
+  <action name="actionBluetooth_BLE_Scan">
+   <property name="text">
+    <string>Bluetooth / BLE Scan</string>
+   </property>
+  </action>
+  <action name="actionRF_Jamming">
+   <property name="text">
+    <string>RF Jamming</string>
+   </property>
+  </action>
+  <action name="actionSpectrum_Analyzer">
+   <property name="text">
+    <string>Spectrum Analyzer</string>
+   </property>
+  </action>
+  <action name="actionPIN_Lock">
+   <property name="text">
+    <string>PIN Lock</string>
+   </property>
+  </action>
+  <action name="actionSelf_Destruct">
+   <property name="text">
+    <string>Self Destruct</string>
+   </property>
+  </action>
+  <action name="actionMAC_Address_Spoofing">
+   <property name="text">
+    <string>MAC Address Spoofing</string>
+   </property>
+  </action>
+  <action name="actionWi_FI_Settings">
+   <property name="text">
+    <string>Wi-FI Settings</string>
+   </property>
+  </action>
+  <action name="actionRFID_NFC_Settings">
+   <property name="text">
+    <string>RFID / NFC Settings</string>
+   </property>
+  </action>
+  <action name="actionTheme_UI">
+   <property name="text">
+    <string>Theme / UI</string>
+   </property>
+  </action>
+  <action name="actionAbout_Legal">
+   <property name="text">
+    <string>About / Legal</string>
+   </property>
+  </action>
+  <action name="actionHome">
+   <property name="text">
+    <string>Home</string>
+   </property>
+  </action>
+  <action name="actionRFID_NFC">
+   <property name="text">
+    <string>RFID / NFC</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
