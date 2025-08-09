@@ -23,7 +23,7 @@
       <height>591</height>
      </rect>
     </property>
-    <widget class="QWidget" name="home">
+    <widget class="QWidget" name="Home">
      <widget class="QPushButton" name="pushButton">
       <property name="geometry">
        <rect>
@@ -38,7 +38,23 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="wifiNetworks">
+    <widget class="QWidget" name="MAC_Address_Spoofing"/>
+    <widget class="QWidget" name="Karma_Attack"/>
+    <widget class="QWidget" name="Beacon_Flood"/>
+    <widget class="QWidget" name="Packet_Sniffer"/>
+    <widget class="QWidget" name="RFID_NFC"/>
+    <widget class="QWidget" name="Wi_FI_Settings"/>
+    <widget class="QWidget" name="Theme_UI"/>
+    <widget class="QWidget" name="RFID_NFC_Settings"/>
+    <widget class="QWidget" name="About_Legal"/>
+    <widget class="QWidget" name="Spectrum_Analyzer"/>
+    <widget class="QWidget" name="RF_Jamming"/>
+    <widget class="QWidget" name="Bad_AP_Emulator_2"/>
+    <widget class="QWidget" name="Bluetooth_BLE_Scan"/>
+    <widget class="QWidget" name="Self_Destruct"/>
+    <widget class="QWidget" name="PIN_Lock"/>
+    <widget class="QWidget" name="Channel_Graph"/>
+    <widget class="QWidget" name="Networks">
      <widget class="QPushButton" name="pushButton_2">
       <property name="geometry">
        <rect>

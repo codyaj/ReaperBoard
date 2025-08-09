@@ -17,6 +17,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    void navigateToPage(QWidget* pageToShow);
 
 private slots:
     void on_actionNetworks_triggered();
