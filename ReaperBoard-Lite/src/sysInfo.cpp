@@ -103,6 +103,12 @@ void SysInfoDisplay::displayScreen() {
     display.display();
 }
 
+void SysInfoDisplay::setOriginalScreenTimeout(int timeout) {
+    if (timeout >= 15) {
+        originalScreenTimeout = timeout;
+    }
+}
+
 void SysInfoDisplay::onEnter() {
     String passcode;
     SDManager::loadSettings(passcode, setScreenTimeout);

@@ -18,9 +18,10 @@ private:
     int index = 0;
     int screenTimeoutIndex = SCREEN_TIMEOUT_TIMES_TOTAL;
     int setScreenTimeout = 0;
-    int originalScreenTimeout;
+    int originalScreenTimeout; // Preserves a custom timeout set in SD card
     bool resetDeviceConfirmation = false;
 public:
+    void setOriginalScreenTimeout(int timeout);
     bool scanInputs() override;
     void displayScreen() override;
     void onEnter() override;
