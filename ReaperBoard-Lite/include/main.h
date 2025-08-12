@@ -5,6 +5,7 @@
 #include <ESP8266WiFi.h>
 
 #define OFF_SWITCH 3 // 3
+#define TIMEOUT_MINIMUM 15 // Seconds
 
 #include "scanWifi.h"
 #include "menu.h"

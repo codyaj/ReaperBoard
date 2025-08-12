@@ -76,7 +76,7 @@ void runScreen(OLEDDisplay* currentScreen) {
     }
 
     if (currentScreen->timeoutEnabled()) {
-      if ((millis() - lastButtonUpdate) >= ((long unsigned int)screenTimeout * 1000) || checkOffBtn()) {
+      if (((millis() - lastButtonUpdate) >= ((long unsigned int)screenTimeout * 1000) || checkOffBtn()) && (long unsigned int)screenTimeout * 1000 > TIMEOUT_MINIMUM) {
         logout();
         awaitingExit = true;
       }
