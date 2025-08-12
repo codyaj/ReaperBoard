@@ -46,6 +46,8 @@ void setup() {
   
   SDManager::loadSettings(passcode, screenTimeout);
 
+  sysInfoDisplay.setOriginalScreenTimeout(screenTimeout);
+
   loginDisplay.setPasscode(passcode);
 
   initOLED();
