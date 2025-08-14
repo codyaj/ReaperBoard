@@ -15,19 +15,9 @@ String getVendor(const uint8_t* mac) {
 }
 
 bool isJunkMac(const uint8_t* mac) {
-    // Check for all zeros
-    bool allZero = true;
-    // Check for all FFs (broadcast)
-    bool allFF = true;
-    for (int i = 0; i < 6; i++) {
-        if (mac[i] != 0x00) allZero = false;
-        if (mac[i] != 0xFF) allFF = false;
-    }
-    if (allZero || allFF) return true;
-
-    // Check multicast bit (least significant bit of first byte)
-    // 1 means multicast, 0 means unicast
-    if (mac[0] & 0x01) return true;
+    if (memcmp(mac, "\x00\x00\x00\x00\x00\x00", 6) == 0) return true;     // Junk
+    if (memcmp(mac, "\xFF\xFF\xFF\xFF\xFF\xFF", 6) == 0) return true;     // Broadcast
+    if (mac[0] & 0x01) return true;                                       // Multicast
 
     return false;  
 }
@@ -63,13 +53,17 @@ void DeauthDisplay::handleData(uint8_t* receiverMac, uint8_t* transmitterMac, ui
     ClientInfo* receiver = findClientByMac(receiverMac);
     ClientInfo* transmitter = findClientByMac(transmitterMac);
 
+    if (!receiver || !transmitter) return; // Prevent null dereference
+
+    unsigned long currTime = millis();
+
     // Update counts and timestamps first (common to all cases)
     receiver->packetCount++;
-    receiver->lastSeenMillis = millis();
+    receiver->lastSeenMillis = currTime;
     receiver->dataCount++;
 
     transmitter->packetCount++;
-    transmitter->lastSeenMillis = millis();
+    transmitter->lastSeenMillis = currTime;
     transmitter->dataCount++;
 
     // Handle based on ToDS/FromDS flags
@@ -220,7 +214,9 @@ void DeauthDisplay::displayScreen() {
 
             WiFi.getNetworkInfo(index, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
 
-            display.println(String(index + 1) + ") " + (isHidden ? "<Hidden>" : ssid));
+            display.print(index + 1);
+            display.print(") ");
+            display.println(isHidden ? "<Hidden>" : ssid);
             display.println("===================");
 
             
@@ -246,21 +242,36 @@ void DeauthDisplay::displayScreen() {
                 case ENC_TYPE_AUTO:   encStr = "Auto"; break;
                 default:              encStr = "Unknown"; break;
             }
-            display.println("Enc: " + encStr);
+            display.print("Enc: ");
+            display.println(encStr);
 
-            display.println("Ch: " + String(channel) + " (" + String(RSSI) + "dBm" + ")");
+            display.print("Ch: ");
+            display.print(channel);
+            display.print(" (");
+            display.print(RSSI);
+            display.println("dBm)");
         } else {
             display.println("Loading...");
         }
     } else if (currStage == AttackStage::CLIENT_SNIFFING) {
         char macStr[9];
         sprintf(macStr, "%02X:%02X:%02X", clients[index].mac[3], clients[index].mac[4], clients[index].mac[5]);
-        display.println(String(index + 1) + "/" + String(clientIndex + 1) + ") :" + macStr + (clients[index].isAP ? "(AP)" : ""));
-        display.println("Vendor: " + getVendor(&clients[index].mac[0]));
+        display.print(index + 1);
+        display.print("/");
+        display.print(clientIndex + 1);
+        display.print(") :");
+        display.print(macStr);
+        display.println(clients[index].isAP ? "(AP)" : "");
+        display.print("Vendor: ");
+        display.println(getVendor(&clients[index].mac[0]));
 
-        display.println("Last seen "  + String((millis() - clients[index].lastSeenMillis) / 1000) + "s ago");
-        display.println("Probe Reqs: " + clients[index].probeReqCount);
-        display.println("Data: " + clients[index].dataCount);
+        display.print("Last seen ");
+        display.print((millis() - clients[index].lastSeenMillis) / 1000);
+        display.println("s ago");
+        display.print("Probe Reqs: ");
+        display.println(clients[index].probeReqCount);
+        display.print("Data: ");
+        display.println(clients[index].dataCount);
         
         display.println(clients[index].direction == Direction::UNKNOWN ? "UNKNOWN" : clients[index].direction == Direction::FROM_AP ? "FROM AP" : "TO AP");
 
@@ -273,7 +284,8 @@ void DeauthDisplay::displayScreen() {
         sprintf(macStr, "%02X:%02X:%02X", targetAPMAC[3], targetAPMAC[4], targetAPMAC[5]);
         display.println("AP:");
         display.println(macStr);
-        display.println("Packets sent: " + String(deauthPacketsSent));
+        display.println("Packets sent: ");
+        display.println(deauthPacketsSent);
         display.println(attackToggle ? "Attack Active" : "Sleeping");
     }
 
