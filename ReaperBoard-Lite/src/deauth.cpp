@@ -63,6 +63,8 @@ void DeauthDisplay::handleData(uint8_t* receiverMac, uint8_t* transmitterMac, ui
     ClientInfo* receiver = findClientByMac(receiverMac);
     ClientInfo* transmitter = findClientByMac(transmitterMac);
 
+    if (!receiver || !transmitter) return; // Prevent null dereference
+
     // Update counts and timestamps first (common to all cases)
     receiver->packetCount++;
     receiver->lastSeenMillis = millis();
