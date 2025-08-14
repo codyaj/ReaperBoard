@@ -220,7 +220,9 @@ void DeauthDisplay::displayScreen() {
 
             WiFi.getNetworkInfo(index, ssid, encryptionType, RSSI, BSSID, channel, isHidden);
 
-            display.println(String(index + 1) + ") " + (isHidden ? "<Hidden>" : ssid));
+            display.print(index + 1);
+            display.print(") ");
+            display.println(isHidden ? "<Hidden>" : ssid);
             display.println("===================");
 
             
@@ -246,21 +248,36 @@ void DeauthDisplay::displayScreen() {
                 case ENC_TYPE_AUTO:   encStr = "Auto"; break;
                 default:              encStr = "Unknown"; break;
             }
-            display.println("Enc: " + encStr);
+            display.print("Enc: ");
+            display.println(encStr);
 
-            display.println("Ch: " + String(channel) + " (" + String(RSSI) + "dBm" + ")");
+            display.print("Ch: ");
+            display.print(channel);
+            display.print(" (");
+            display.print(RSSI);
+            display.println("dBm)");
         } else {
             display.println("Loading...");
         }
     } else if (currStage == AttackStage::CLIENT_SNIFFING) {
         char macStr[9];
         sprintf(macStr, "%02X:%02X:%02X", clients[index].mac[3], clients[index].mac[4], clients[index].mac[5]);
-        display.println(String(index + 1) + "/" + String(clientIndex + 1) + ") :" + macStr + (clients[index].isAP ? "(AP)" : ""));
-        display.println("Vendor: " + getVendor(&clients[index].mac[0]));
+        display.print(index + 1);
+        display.print("/");
+        display.print(clientIndex + 1);
+        display.print(") :");
+        display.print(macStr);
+        display.println(clients[index].isAP ? "(AP)" : "");
+        display.print("Vendor: ");
+        display.println(getVendor(&clients[index].mac[0]));
 
-        display.println("Last seen "  + String((millis() - clients[index].lastSeenMillis) / 1000) + "s ago");
-        display.println("Probe Reqs: " + clients[index].probeReqCount);
-        display.println("Data: " + clients[index].dataCount);
+        display.print("Last seen ");
+        display.print((millis() - clients[index].lastSeenMillis) / 1000);
+        display.println("s ago");
+        display.print("Probe Reqs: ");
+        display.println(clients[index].probeReqCount);
+        display.print("Data: ");
+        display.println(clients[index].dataCount);
         
         display.println(clients[index].direction == Direction::UNKNOWN ? "UNKNOWN" : clients[index].direction == Direction::FROM_AP ? "FROM AP" : "TO AP");
 
