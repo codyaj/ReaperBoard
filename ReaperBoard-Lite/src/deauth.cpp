@@ -284,7 +284,8 @@ void DeauthDisplay::displayScreen() {
         sprintf(macStr, "%02X:%02X:%02X", targetAPMAC[3], targetAPMAC[4], targetAPMAC[5]);
         display.println("AP:");
         display.println(macStr);
-        display.println("Packets sent: " + String(deauthPacketsSent));
+        display.println("Packets sent: ");
+        display.println(deauthPacketsSent);
         display.println(attackToggle ? "Attack Active" : "Sleeping");
     }
 
