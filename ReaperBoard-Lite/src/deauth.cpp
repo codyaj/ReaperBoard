@@ -15,19 +15,9 @@ String getVendor(const uint8_t* mac) {
 }
 
 bool isJunkMac(const uint8_t* mac) {
-    // Check for all zeros
-    bool allZero = true;
-    // Check for all FFs (broadcast)
-    bool allFF = true;
-    for (int i = 0; i < 6; i++) {
-        if (mac[i] != 0x00) allZero = false;
-        if (mac[i] != 0xFF) allFF = false;
-    }
-    if (allZero || allFF) return true;
-
-    // Check multicast bit (least significant bit of first byte)
-    // 1 means multicast, 0 means unicast
-    if (mac[0] & 0x01) return true;
+    if (memcmp(mac, "\x00\x00\x00\x00\x00\x00", 6) == 0) return true;     // Junk
+    if (memcmp(mac, "\xFF\xFF\xFF\xFF\xFF\xFF", 6) == 0) return true;     // Broadcast
+    if (mac[0] & 0x01) return true;                                       // Multicast
 
     return false;  
 }
