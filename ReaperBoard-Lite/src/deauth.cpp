@@ -55,13 +55,15 @@ void DeauthDisplay::handleData(uint8_t* receiverMac, uint8_t* transmitterMac, ui
 
     if (!receiver || !transmitter) return; // Prevent null dereference
 
+    unsigned long currTime = millis();
+
     // Update counts and timestamps first (common to all cases)
     receiver->packetCount++;
-    receiver->lastSeenMillis = millis();
+    receiver->lastSeenMillis = currTime;
     receiver->dataCount++;
 
     transmitter->packetCount++;
-    transmitter->lastSeenMillis = millis();
+    transmitter->lastSeenMillis = currTime;
     transmitter->dataCount++;
 
     // Handle based on ToDS/FromDS flags
