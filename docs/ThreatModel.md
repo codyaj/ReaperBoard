@@ -4,10 +4,9 @@
 
 ReaperBoard is a dual-platform hardware tool for wireless and NFC testing:
 
-- **ReaperBoard** (CM4-based): Full-featured version with large display and advanced capabilities.
 - **ReaperBoard-Lite** (ESP8266-based): Lightweight small version for stealthy operation.
 
-Both platforms support a range of wireless functions intended for **educational, auditing, and lawful penetration testing** purposes.
+This platform supports a range of wireless functions intended for **educational, auditing, and lawful penetration testing** purposes.
 
 This document outlines the security posture of the device, potential risks, and mitigations for both the device and the environments it may operate in.
 

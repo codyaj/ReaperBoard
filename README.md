@@ -2,10 +2,7 @@
 ![Platform](https://img.shields.io/badge/platform-ESP8266|CM4-blue)
 # ReaperBoard
 
-ReaperBoard is a modular, multi-platform wireless security toolkit designed for ethical penetration testing and hardware hacking. It currently includes two main versions:
-
-- **ReaperBoard-Lite:** A lightweight, ESP8266-12E based device featuring Wi-Fi scanning, Bad AP emulation, deauthentication attacks, MAC spoofing, and RFID/NFC cloning.
-- **ReaperBoard-Full:** A more powerful version (in development) built around the Raspberry Pi Compute Module 4 (CM4), adding advanced capabilities like packet sniffing, signal jamming, Wi-Fi brute forcing, and more.
+A lightweight, ESP8266-12E based device featuring Wi-Fi scanning, Bad AP emulation, deauthentication attacks, MAC spoofing, and RFID/NFC cloning.
 
 ---
 
@@ -17,8 +14,6 @@ ReaperBoard aims to provide an extensible, open-source platform for wireless sec
 
 ## Features
 
-### ReaperBoard-Lite (ESP8266-12E)
-
 - Wi-Fi network scanning
 - Custom Bad Access Point (AP) emulation
 - Deauthentication attack module
@@ -26,15 +21,6 @@ ReaperBoard aims to provide an extensible, open-source platform for wireless sec
 - RFID/NFC reading and saving
 - Self-destruct mechanism on tamper detection
 - PIN entry security
-
-### ReaperBoard-Full (Raspberry Pi CM4) *(coming soon)*
-
-- Everything from Lite version  
-- Packet sniffing and logging
-- Packet analysis
-- Signal jamming  
-- Wi-Fi brute force attacks  
-- Extended storage and advanced UI  
 
 ---
 
@@ -47,7 +33,7 @@ git clone https://github.com/codyaj/ReaperBoard.git
 cd ReaperBoard/ReaperBoard-Lite
 ```
 
-### Building and Flashing (Lite)
+### Building and Flashing
 
 - Install ESP8266 toolchain (Arduino IDE or PlatformIO recommended).
 - Configure hardware pins and settings.
@@ -71,4 +57,4 @@ ReaperBoard is designed for ethical use only. Unauthorized access to networks or
 
 ---
 
-> Note: The ReaperBoard-Lite and Full are actively in development. Contributions are welcome!
+> Note: The ReaperBoard-Lite is actively in development. Contributions are welcome!
